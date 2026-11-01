@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pendaftaran dan Penjadwalan Dialisis · RSUD Welas Asih</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f0f8f3;--card:#fff;--tx:#1b2430;--mut:#6b7785;--bd:#d3e6da;--pri:#1f8a5b;--on:#fff;--l1:#cfe8c9;--l2:#cfdcf5;--hep:#f3b4b4;--hcv:#f1b6f3;--iso:#a9e6f0;--oth:#e8ecf0;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a15;--card:#16231d;--tx:#e8edf2;--mut:#9aa7b4;--bd:#2a3d33;--pri:#4cc38a;--on:#062a1a;--l1:#27452a;--l2:#27395e;--hep:#6b2b2b;--hcv:#62296a;--iso:#1b5560;--oth:#2c3641;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a15;--card:#16231d;--tx:#e8edf2;--mut:#9aa7b4;--bd:#2a3d33;--pri:#4cc38a;--on:#062a1a;--l1:#27452a;--l2:#27395e;--hep:#6b2b2b;--hcv:#62296a;--iso:#1b5560;--oth:#2c3641;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,sans-serif;padding:10px;max-width:1100px;margin:auto}
+h1{font-size:17px;margin:4px 0}h3{margin:10px 0 6px;font-size:15px}
+.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+nav{display:flex;gap:6px;margin:8px 0;overflow-x:auto}
+button,input,select{font:inherit;color:inherit;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:7px 10px}
+button{cursor:pointer}nav button.on,button.pri{background:var(--pri);color:var(--on);border-color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;margin-bottom:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin-bottom:10px}
+.cards .card{margin:0;text-align:center}.cards b{display:block;font-size:22px}.cards span,.mut,small{color:var(--mut);font-size:12px}
+small{display:block}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.lh{padding:6px 10px;border-radius:8px 8px 0 0;font-weight:700;display:flex;justify-content:space-between}
+.l1{background:var(--l1)}.l2{background:var(--l2)}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+td{border-bottom:1px solid var(--bd);padding:5px 6px;vertical-align:middle}
+tr.bt td:nth-child(2){text-decoration:line-through;opacity:.55}
+td button{padding:2px 6px;border-radius:6px}
+.k{padding:2px 7px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
+.k{color:#1b2430}.k-hep{background:#f08a8a}.k-hcv{background:#f5a3cf}.k-iso{background:#8fd8ee}.k-nr{background:#9be39b}.k-o{background:#e6e9ee}tr.r-Ranap td{background:rgba(255,160,60,.3)}tr.r-IGD td{background:rgba(150,110,230,.3)}.as{font-size:10px;font-weight:700;margin-left:5px;opacity:.75}.poster{background:#fff;color:#1b2430;border-radius:10px;padding:10px;max-width:760px;margin:auto}.poster table{background:#fff}.poster td{border-color:#c9d1da;padding:3px 6px}.poster .th td{background:#3f7d62;color:#fff;font-weight:700;text-align:center}.poster .ph2{text-align:center;margin-bottom:8px}.poster .lh{border-radius:0;justify-content:center;color:#1b2430}.poster .l1{background:#cfe8c9}.poster .l2{background:#cfdcf5}.poster .iso td{background:#eee;color:#777;font-style:italic;font-size:12px}.ft{font-size:12px;padding:4px 2px;color:#555}.lg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:11px}.lg span{padding:2px 7px;border-radius:5px}.poster .grid{grid-template-columns:1fr 1fr;gap:6px}@media(max-width:600px){.poster{padding:6px}.poster td{font-size:11px;padding:2px 3px}.poster .k{font-size:10px;padding:1px 4px}.poster .as{display:block;margin:0}.poster .ph2{font-size:12px}}
+.tb{color:var(--pri)}
+.br{display:flex;align-items:center;gap:8px;margin:4px 0}.br span{width:62px;font-size:12px}.br i{flex:1;background:var(--oth);height:10px;border-radius:5px;overflow:hidden}.br u{display:block;height:100%;background:var(--pri)}.br b{width:26px;text-align:right}
+dialog{border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);width:min(92vw,420px)}
+dialog label{display:block;margin:6px 0;font-size:12px;color:var(--mut)}dialog input,dialog select{width:100%;box-sizing:border-box;margin-top:2px;color:var(--tx)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.days{display:flex;flex-wrap:wrap;gap:4px}.days label{display:flex;align-items:center;gap:3px;margin:0}.days input{width:auto;margin:0}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--pri);color:var(--on);padding:8px 14px;border-radius:20px;display:none}
+.sb{margin-bottom:8px;font-size:12px}.r3{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px;margin-bottom:4px}.r3 label{display:block;color:var(--mut)}.r3 input{width:100%;box-sizing:border-box;margin-top:2px}.tt{text-align:center;color:var(--mut)}.tt b{display:block;font-size:20px;color:var(--tx)}
+.cr{text-align:center;color:var(--mut);font-size:12px;margin:14px 0 6px;letter-spacing:.3px}
+.grid.side{grid-template-columns:1fr 1fr;gap:4px}.grid.side>div{min-width:0}.side td{font-size:11px;padding:3px 2px}.side td button{padding:1px 3px;font-size:11px}.side small{font-size:10px}.side .lh{font-size:12px;padding:5px 6px}
+.ph{display:none}
+@media print{#stkw{display:none!important}body{padding:0;max-width:none;background:#fff}.poster{max-width:none;padding:0}body>.cr{display:none}.top,nav,.bar,.np,#toast{display:none!important}.ph{display:block;text-align:center;margin-bottom:6px}.grid{grid-template-columns:1fr 1fr}.card{border:0;padding:0}td{padding:2px 4px;font-size:12px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.sg{display:block;width:100%;text-align:left;margin:4px 0;padding:6px 10px}
+.b{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin:2px 3px 2px 0;color:#1b2430;background:#e6e9ee}.b.cito{background:#d32f2f;color:#fff}.b.hbs{background:#f08a8a}.b.hcv{background:#f5a3cf}.b.hiv{background:#d9c8f7}.b.ok{background:#9be39b}.b.no{background:#ffd9a8}
+.note{background:rgba(255,160,60,.18);border-radius:8px;padding:6px 8px;font-size:12px;margin-top:6px}.err{color:#d32f2f;font-size:13px;margin:6px 0}
+#rg label{display:block;margin:8px 0 0;font-size:12px;color:var(--mut)}#rg label input,#rg label select,#rg label textarea{display:block;width:100%;box-sizing:border-box;margin-top:3px}#rg input[type=checkbox]{display:inline;width:auto;margin-right:6px}
+textarea{font:inherit;color:inherit;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px}
+.rtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.th img{max-width:100%;height:auto;border-radius:6px;margin:4px 0;border:1px solid var(--bd)}#th img{height:64px;width:auto;margin-right:4px}
+input.ab,.ab{color:#d32f2f!important;border-color:#d32f2f!important;font-weight:700}
+dialog table td:first-child,#rg table td:first-child{color:var(--mut);width:42%}
+
+#land{position:fixed;inset:0;overflow:auto;z-index:20;background:linear-gradient(165deg,#e4f6ec 0%,#c6ead6 48%,#eef8f2 100%);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) #land{background:linear-gradient(165deg,#0f1a15,#143325 55%,#0f1a15)}}
+:root[data-theme="dark"] #land{background:linear-gradient(165deg,#0f1a15,#143325 55%,#0f1a15)}
+.lw{max-width:420px;margin:0 auto;padding:26px 18px 30px;text-align:center}
+.lwrap{display:inline-block;background:#fff;border-radius:22px;padding:10px 16px;box-shadow:0 6px 22px rgba(20,100,65,.18)}.logo{width:150px;height:auto;display:block}
+.lw h1{font-size:21px;line-height:1.25;margin:16px 0 4px;color:var(--pri)}.lsub{font-size:13px;color:var(--mut);margin-bottom:16px}
+.lcard{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(20,100,65,.16);text-align:left}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--bg);padding:4px;border-radius:12px}.seg button{border:0;background:transparent;padding:10px 6px;border-radius:9px;font-weight:600}.seg button.on{background:var(--pri);color:var(--on)}
+#land label{display:block;margin:12px 0 0;font-size:12px;color:var(--mut)}#land label input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px}
+.big{width:100%;padding:13px;margin-top:14px;font-weight:700}
+.hl{height:34px;width:auto;background:#fff;border-radius:8px;padding:2px 4px;margin-right:6px}
+.top h1{display:flex;align-items:center;font-size:16px}
+.bar button.on{background:var(--pri);color:var(--on);border-color:var(--pri)}
+.rk{color:#d32f2f;font-weight:800}.nr{color:#2e7d32}select.rk,select.nr{font-weight:700}select.rk{border-color:#d32f2f}
+.lkb{display:block;width:100%;text-align:left;margin-top:4px;background:var(--card)}.lkb small{display:block}
+#land label select{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px}#land small{margin-top:6px}
+.cbl{display:block;margin:12px 0 0;font-size:12px;color:var(--mut)}.cb{position:relative}#land .cb input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px 44px 11px 11px}
+.cbt{position:absolute;right:3px;bottom:3px;height:38px;width:40px;border:0!important;background:transparent!important;font-size:17px;color:var(--mut);cursor:pointer;border-radius:8px}.cbt:hover{background:rgba(30,140,95,.12)!important}
+.cbd{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.18);max-height:250px;overflow:auto;margin-top:3px}.cbd div{padding:10px 12px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--bd)}.cbd div:last-child{border-bottom:0}.cbd div:hover{background:rgba(30,140,95,.14)}
+#demoBar{position:fixed;left:8px;bottom:8px;z-index:60;background:#f59e0b;color:#1b2430;font-size:11px;font-weight:700;padding:4px 6px 4px 10px;border-radius:14px;display:flex;gap:6px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.25)}#demoBar button{padding:2px 8px;font-size:11px;border-radius:10px;background:#fff;color:#1b2430;border-color:#fff}
+#stkw,.rstk{position:sticky;top:0;z-index:20;background:var(--bg);padding-bottom:2px;border-bottom:1px solid var(--bd)}
+#stkw nav,.rstk nav{margin:6px 0}#vbar:empty{display:none}#vbar>*{margin-top:4px;margin-bottom:4px}#vbar .stk{position:static;padding:0}
+.mg2{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}.mg2.side{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}@media(max-width:480px){.mg2.side{grid-template-columns:minmax(0,1fr)}}
+.glh{font-weight:800;padding:8px 10px;border-radius:8px;letter-spacing:.3px}.glh1{background:var(--l1)}.glh2{background:var(--l2)}
+.gh2{font-weight:700;background:var(--oth);padding:5px 10px;border-radius:8px;margin:10px 0 2px}
+.ch{font-size:12px;color:var(--mut);font-weight:600;margin:4px 0 2px}.mc{min-width:0}
+.mp{display:flex;gap:6px;align-items:flex-start;border-bottom:1px solid var(--bd);padding:5px 2px}.mp .no{width:20px;text-align:right;color:var(--mut);flex:none}.mp .mi{flex:1;min-width:0;overflow-wrap:anywhere}.mp .mi small{display:block}.mp .ma{display:flex;gap:4px;margin-top:3px}.mp .ma button{padding:2px 7px;border-radius:6px}
+.dys .dr{display:flex;align-items:center;gap:8px;margin-top:5px}.dys .dr label{display:flex;align-items:center;gap:5px;margin:0;min-width:70px}.dys .dr input[type=checkbox]{width:auto;margin:0}.dys .dr select{flex:1;padding:5px 8px}.dys .dr select:disabled{opacity:.45}
+</style></head><body><div id="land" style="display:none"><div class="lw"><div class="lwrap"><img class="lgi logo" alt="RSUD Welas Asih"></div><h1>Pendaftaran dan Penjadwalan Dialisis</h1><div class="lsub">Instalasi Hemodialisa · RSUD Welas Asih<br>Provinsi Jawa Barat</div><div class="lcard"><div class="seg"><button id="sg2" class="on" onclick="lMode(2)">Pendaftaran Dialisis</button><button id="sg1" onclick="lMode(1)">Jadwal HD</button></div><div id="lp2"><div id="l_ruang_w"></div><div id="l_kode_w" style="display:none"><label>Kode ruangan<input id="l_kode" type="password"></label></div></div><div id="lp1" style="display:none"><label>PIN petugas<input id="l_pin" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')doLogin()"></label></div><div id="l_err" class="err"></div><button class="pri big" id="lb" onclick="doLogin()">Masuk</button></div><div class="cr">Inovasi by: Epi Abdul Wahid</div></div></div>
+<div id="stkw"><div class="top"><h1><img class="lgi hl" alt="">Pendaftaran &amp; Penjadwalan HD</h1><span id="sync" class="mut" onclick="boot()" style="cursor:pointer;flex:1"></span><input type="date" id="dt" onchange="cur=this.value;mon=cur.slice(0,7);render()"><button onclick="logout()">Keluar</button></div>
+<nav><button data-v="dash" onclick="go('dash')">Dasbor</button><button data-v="harian" onclick="go('harian')">Jadwal Harian</button><button data-v="pend" onclick="go('pend')">Pendaftaran <b id="pb"></b></button><button data-v="rilis" onclick="go('rilis')">Rilis per Shift</button><button data-v="master" onclick="go('master')">Pasien Tetap</button><button data-v="riwayat" onclick="go('riwayat')">Riwayat</button></nav><div id="vbar"></div></div>
+<div id="main"></div><div class="cr">Inovasi by: Epi Abdul Wahid</div><div id="rg" style="display:none"></div><dialog id="dlg"></dialog><div id="toast"></div>
+<script>
+const DEMO=false;/* true = mode review/demo (tanpa server). Ganti false untuk memakai server Apps Script asli. */
+const _ls={g:Storage.prototype.getItem,s:Storage.prototype.setItem,r:Storage.prototype.removeItem};
+if(DEMO){Storage.prototype.getItem=function(k){return _ls.g.call(this,'demo_'+k)};Storage.prototype.setItem=function(k,v){return _ls.s.call(this,'demo_'+k,v)};Storage.prototype.removeItem=function(k){return _ls.r.call(this,'demo_'+k)}}
+const $=s=>document.querySelector(s),KEY='hd_sched_v1';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9),pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const tgl=s=>pd(s).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const HARI=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+let S={master:[],jadwal:{},kap:12,seeded:false},V='dash',cur=ymd(new Date()),mon=cur.slice(0,7),FM=null;
+/* ---- Masuk & penyimpanan (Google Drive via Apps Script) ---- */
+const LOGO='data:image/png;base64,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';
+const GAS_URL='https://script.google.com/macros/s/AKfycbyZoG6OEiYNBQu-BTY-fryZcr16fVYIr4e96V0Tjwh_aUorQV7RdnFVxbddkMeLj4DP/exec';
+const WA_PETUGAS='';/* isi nomor WA petugas penjadwalan, format 62812xxxxxxx. Kosong = pilih kontak/grup sendiri saat kirim */
+let TOK='',ME=null,conflict=false,tm=null,saving=false,dirty=false,SL=false,LM=2;
+try{TOK=localStorage.getItem('hd_tok')||'';ME=JSON.parse(localStorage.getItem('hd_me')||'null')}catch(e){}
+function stat(t,c){const e=$('#sync');if(e){e.textContent=t;e.style.color=c||''}}
+function api(act,payload){if(DEMO)return demoApi(act,payload);return new Promise((ok,no)=>{
+if(!/^https:/.test(GAS_URL))return no(new Error('URL Apps Script belum diisi'));
+fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act,token:TOK,payload})}).then(r=>r.json()).then(r=>{if(r&&r.auth&&act!=='login')logout(r.error);ok(r)},no)})}
+const lerr=t=>{$('#l_err').textContent=t||''};
+function lMode(m){LM=m;$('#sg1').classList.toggle('on',m===1);$('#sg2').classList.toggle('on',m===2);$('#lp1').style.display=m===1?'':'none';$('#lp2').style.display=m===2?'':'none';lerr('')}
+function showLand(m){document.querySelectorAll('.lgi').forEach(i=>i.src=LOGO);$('#land').style.display='';lMode(typeof m==='string'&&m?LM:2);lerr(m||'');$('#lb').disabled=false;$('#lb').textContent='Masuk';renderRuang()}
+/* ---- Nama ruangan tersimpan (per perangkat) ---- */
+const RLK='hd_ruang_list',RKEY="onkeydown=\"if(event.key==='Enter')doLogin()\"";
+const RUANG_STD=['IGD','GICU','ICCU','PICU','HCCU dan Stroke Unit','ALI BIN ABI THOLIB Lt.3','ALI BIN ABI THOLIB Lt.4','ABDURAHMAN BIN AUF Lt. 1','ABDURAHMAN BIN AUF Lt. 2','HASAN BIN ALI','HUSAIN BIN ALI','KHALID BIN WALID','SAID BIN ZAID','SALMAN AL FARIZI','SITI KHADIJAH','UMAR BIN KHATTAB 1','UMAR BIN KHATTAB 2','UMAR BIN KHATTAB 3','USTMAN BIN AFFAN 1','USTMAN BIN AFFAN 2','USTMAN BIN AFFAN 3'];
+const ruNorm=x=>String(x||'').replace(/\s+/g,' ').trim(),ruKey=x=>ruNorm(x).toLowerCase();
+function ruSaved(){let a=[];try{a=JSON.parse(localStorage.getItem(RLK)||'[]');if(!Array.isArray(a))a=[]}catch(e){a=[]}return a}
+function ruList(){const seen=new Set(),out=[];[...RUANG_STD,...ruSaved()].forEach(x=>{x=ruNorm(x);const k=x.toLowerCase();if(x&&!seen.has(k)){seen.add(k);out.push(x)}});return out.sort((p,q)=>p.localeCompare(q,'id',{numeric:true,sensitivity:'base'}))}
+function ruCanon(n){n=ruNorm(n);const k=n.toLowerCase(),f=ruList().find(x=>x.toLowerCase()===k);return f||n}
+function addRuang(n){n=ruCanon(n);if(!n)return;try{localStorage.setItem('hd_ruang',n);if(RUANG_STD.some(x=>ruKey(x)===ruKey(n)))return;const a=ruSaved().filter(x=>ruKey(x)!==ruKey(n));a.unshift(n);localStorage.setItem(RLK,JSON.stringify(a.slice(0,30)))}catch(e){}}
+function getRuang(){return ruCanon(($('#l_ruang')||{}).value||'')}
+/* kotak ketik + saran + panah ▾ */
+function ruShow(all){const l=$('#l_ruang_dd'),i=$('#l_ruang');if(!l||!i)return;const q=ruKey(i.value),a=ruList();
+let r=all||!q?a:[...a.filter(x=>ruKey(x).startsWith(q)),...a.filter(x=>!ruKey(x).startsWith(q)&&ruKey(x).includes(q))];
+l.innerHTML=r.length?r.map(x=>`<div onmousedown="event.preventDefault()" onclick="ruPick(this.dataset.v)" data-v="${esc(x)}">${esc(x)}</div>`).join(''):`<div class="mut" style="cursor:default">Tidak ada saran. Nama baru akan disimpan otomatis saat masuk.</div>`;
+l.style.display=''}
+function ruHide(){const l=$('#l_ruang_dd');if(l)l.style.display='none'}
+function ruPick(v){const i=$('#l_ruang');i.value=v;ruHide();i.focus()}
+function ruToggle(){const l=$('#l_ruang_dd');if(l.style.display==='none')ruShow(true);else ruHide()}
+function renderRuang(){const w=$('#l_ruang_w');if(!w)return;let last='';try{last=localStorage.getItem('hd_ruang')||''}catch(e){}
+w.innerHTML=`<div class="cbl">Nama ruangan</div><div class="cb"><input id="l_ruang" placeholder="Ketik atau pilih ruangan…" autocomplete="off" value="${esc(last)}" oninput="ruShow(false)" onfocus="this.select()" onblur="setTimeout(ruHide,150)" onkeydown="if(event.key==='Enter'){ruHide();doLogin()}else if(event.key==='Escape')ruHide()"><button type="button" class="cbt" aria-label="Tampilkan daftar ruangan" onmousedown="event.preventDefault()" onclick="ruToggle()">▾</button><div id="l_ruang_dd" class="cbd" style="display:none"></div></div><small>Ketik huruf awal untuk melihat saran, atau ketuk tanda ▾ untuk memilih dari daftar (urut abjad). Ruangan yang belum ada di daftar tetap bisa diketik dan otomatis tersimpan.</small>`}
+async function doLogin(){const pay=LM===1?{mode:'petugas',pin:$('#l_pin').value.trim()}:{mode:'ruangan',ruang:getRuang(),kode:$('#l_kode').value.trim()};
+if(LM===1&&!pay.pin)return lerr('Masukkan PIN petugas');if(LM===2&&!pay.ruang)return lerr('Isi nama ruangan');
+$('#lb').disabled=true;$('#lb').textContent='Memproses…';lerr('');
+try{const r=await api('login',pay);if(!r.ok){if(r.needKode)$('#l_kode_w').style.display='';$('#lb').disabled=false;$('#lb').textContent='Masuk';return lerr(r.error)}
+TOK=r.token;ME=r.user;try{localStorage.setItem('hd_tok',TOK);localStorage.setItem('hd_me',JSON.stringify(ME));if(LM===2)addRuang(pay.ruang)}catch(e){}
+$('#l_pin').value='';boot()}
+catch(e){$('#lb').disabled=false;$('#lb').textContent='Masuk';lerr('Tidak dapat terhubung: '+(e.message||'periksa internet'))}}
+function logout(m){TOK='';ME=null;SL=false;try{localStorage.removeItem('hd_tok');localStorage.removeItem('hd_me');localStorage.removeItem(KEY)}catch(e){}S={master:[],jadwal:{},seeded:false};PEND=[];FOTO=[];seen=null;OLD=null;applyRole();showLand(typeof m==='string'?m:'')}
+function applyRole(){const r=ME&&ME.role==='ruangan',h=!ME||r;[$('#stkw'),$('#main')].forEach(e=>e.style.display=h?'none':'');$('#rg').style.display=r?'':'none';$('#land').style.display=ME?'none':''}
+async function boot(){conflict=false;document.querySelectorAll('.lgi').forEach(i=>i.src=LOGO);applyRole();
+if(!TOK||!ME)return showLand();
+if(ME.role==='ruangan'){renderRg();return}
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+render();stat('Memuat dari Drive…');
+try{const r=await api('load');if(!r.ok){if(!r.auth)stat('Gagal memuat: '+(r.error||''),'#c00');return}
+S={master:[],jadwal:{},...r.data};SL=true;render();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}stat('Tersimpan di Drive ✓');pendRefresh(true)}
+catch(e){stat('Offline, memakai data lokal ('+(e.message||'gagal')+') — ketuk untuk coba lagi','#c00')}}
+function save(){for(const k in S.jadwal)if(!S.jadwal[k].items.length&&!S.jadwal[k].rilis&&!hasStf(S.jadwal[k]))delete S.jadwal[k];try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}dirty=true;clearTimeout(tm);tm=setTimeout(push,700);stat('Menyimpan…')}
+async function push(){if(conflict||!TOK||!ME||ME.role!=='petugas')return;if(saving){tm=setTimeout(push,700);return}saving=true;dirty=false;
+try{const r=await api('save',JSON.stringify(S));
+if(r.ok){S._rev=r.rev;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}stat(dirty?'Menyimpan…':'Tersimpan di Drive ✓');pSync()}
+else if(r.conflict){conflict=true;stat('⚠ Data diubah di perangkat lain. Ketuk di sini untuk muat ulang','#c00')}
+else stat('Gagal menyimpan: '+(r.error||''),'#c00')}
+catch(e){stat('Gagal menyimpan (offline?). Ketuk untuk coba lagi','#c00')}
+saving=false;if(dirty&&!conflict)push()}
+function backup(){const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='jadwal-hd-'+ymd(new Date())+'.json';a.click()}
+function restore(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.master||!d.jadwal)throw 0;const rev=S._rev;S=d;S._rev=rev;save();render();toast('Data dipulihkan')}catch(e){toast('File tidak valid')}};r.readAsText(f)}
+function seed(){const A=['Rajal','Ranap','IGD'],K=['','','HBsAg','','HCV','','ISO TB','','','','',''];
+for(let i=0;i<14;i++)S.master.push({id:uid(),nama:'Pasien Contoh '+pad(i+1),rm:'00-0000'+pad(i+1),asal:A[i%4==3?2:i%5==4?1:0],hari:i%2?[2,4,6]:[1,3,5],shift:i%4<2?'Pagi':'Siang',lantai:i%3==0?2:1,ket:K[i%12],aktif:true});
+S.seeded=true;save()}
+const J=d=>S.jadwal[d]||(S.jadwal[d]={items:[],rilis:null});
+const act=d=>(S.jadwal[d]?.items||[]).filter(i=>i.status!=='Batal');
+const hasStf=j=>Object.values(j.staff||{}).some(o=>o.p1||o.p2||o.m1||o.m2);
+const stf=(d,sh)=>{const j=J(d);j.staff=j.staff||{};return j.staff[sh]||(j.staff[sh]={p1:0,p2:0,m1:0,m2:0})};
+const lim=(sh,l)=>{if(sh==='CITO')return Infinity;const m=stf(cur,sh)['m'+l];return m>0?Math.min(m,CAP[l].t):CAP[l].t};
+const jml=(sh,l,ex)=>act(cur).filter(i=>i.shift===sh&&i.lantai===l&&i.id!==ex).length;
+const penuh=(sh,l,ex)=>sh!=='CITO'&&jml(sh,l,ex)>=lim(sh,l);
+const msgPenuh=(sh,l)=>'Lantai '+l+' shift '+sh+' sudah penuh (maks '+lim(sh,l)+' pasien)';
+function setStf(sh,k,v){let n=Math.max(0,parseInt(v)||0);if(k[0]==='m')n=Math.min(n,CAP[+k[1]].t);stf(cur,sh)[k]=n;J(cur).rilis=null;save();render()}
+function stfBar(s){const o=stf(cur,s);
+const inp=(k,l,ph)=>`<label class="np">${l}<input type="number" min="0" inputmode="numeric" placeholder="${ph||''}" value="${o[k]||''}" onchange="setStf('${s}','${k}',this.value)"></label>`;
+const st=l=>{const n=jml(s,l),m=lim(s,l),f=n>=m;return `<span style="${f?'color:#c00;font-weight:600':''}">Lt.${l}: ${n}/${m} · ${n>m?'⚠ melebihi':f?'PENUH':'sisa '+(m-n)}</span>`};
+return `<div class="sb"><div class="r3">${inp('p1','Perawat Lt.1')}${inp('m1','Maks pasien Lt.1','40')}${inp('p2','Perawat Lt.2')}${inp('m2','Maks pasien Lt.2','40')}<div class="tt"><span>Total perawat</span><b>${(o.p1||0)+(o.p2||0)}</b></div></div>${st(1)} &nbsp;|&nbsp; ${st(2)}</div>`}
+const fj=j=>j?String(j).replace(':','.'):'',sj=j=>j.shift==='CITO'?'CITO'+(j.jam?' '+fj(j.jam):''):j.shift;
+const urut=a=>[...a].sort((x,y)=>{const rx=x.jenis==='Tambahan'?1:0,ry=y.jenis==='Tambahan'?1:0;return rx!==ry?rx-ry:rx?(x.jam&&y.jam?String(x.jam).localeCompare(String(y.jam)):0):x.nama.localeCompare(y.nama,'id',{sensitivity:'base'})});
+const kc=k=>{k=k||'';return !k?'':/HCV/i.test(k)?'k-hcv':/HBS|HEP/i.test(k)?'k-hep':/ISO|\bTB\b/i.test(k)?'k-iso':/NON\s*REG/i.test(k)?'k-nr':'k-o'};
+const CAP={1:{t:40,iso:[{n:'HBsAg',i:3,re:/HBS|HEP/i},{n:'HCV',i:2,re:/HCV/i}]},2:{t:40,iso:[{n:'HCV',i:2,re:/HCV/i},{n:'ISO TB',i:1,re:/ISO|\bTB\b/i}]}};let RS='Pagi';
+let SIDE;try{const v=localStorage.getItem('hd_side');SIDE=v===null?innerWidth>=700:v==='1'}catch(e){SIDE=innerWidth>=700}
+function toggleSide(){SIDE=!SIDE;try{localStorage.setItem('hd_side',SIDE?'1':'0')}catch(e){}render()}
+const isoOf=(k,l)=>CAP[l].iso.find(x=>x.re.test(k||''));
+const cnt=(a,l)=>{const r=CAP[l].iso.map(x=>({...x,u:a.filter(i=>isoOf(i.ket,l)===x).length})),io=r.reduce((s,x)=>s+x.u,0);return{r,io,reg:a.length-io,rt:CAP[l].t-CAP[l].iso.reduce((s,x)=>s+x.i,0)}};
+const sel=(a,v)=>a.map(x=>`<option ${String(x)===String(v)?'selected':''}>${x}</option>`).join('');
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',3800)}
+function go(v){if(v==='master'&&V!=='master')MQ='';V=v;render()}
+function liftBar(){const v=$('#vbar'),m=$('#main');if(!v||!m)return;v.innerHTML='';const c=[...m.children];let n=({dash:1,harian:1,pend:1,rilis:1,master:1,riwayat:2})[V]||0;
+if(V==='dash'&&c[1]&&c[1].classList.contains('card')&&c[1].querySelector(':scope>button.pri'))n=2;
+c.slice(0,n).forEach(e=>v.appendChild(e))}
+function render(){$('#dt').value=cur;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===V));$('#main').innerHTML=({dash:vDash,harian:vHarian,pend:()=>{pendRefresh();return vPend()},rilis:vRilis,master:vMaster,riwayat:vRiwayat})[V]();liftBar()}
+
+/* ---- Dasbor ---- */
+const bar=(l,v,m)=>`<div class="br"><span>${l}</span><i><u style="width:${m?v/m*100:0}%"></u></i><b>${v}</b></div>`;
+function vDash(){const a=act(cur),all=S.jadwal[cur]?.items||[];
+const c=f=>a.filter(f).length,asal=x=>c(i=>i.asal===x);
+const ms=Object.keys(S.jadwal).filter(k=>k.startsWith(mon)).sort();let tot=0,ma={Rajal:0,Ranap:0,IGD:0},mp={Pagi:0,Siang:0,CITO:0},pdv=[];
+ms.forEach(k=>{const x=act(k);tot+=x.length;x.forEach(i=>{ma[i.asal]=(ma[i.asal]||0)+1;mp[i.shift]++});pdv.push([k.slice(8),x.length])});
+const mx=Math.max(1,...pdv.map(p=>p[1]));
+return `<h3>${tgl(cur)}</h3>
+${all.length?'':`<div class="card">Belum ada jadwal untuk tanggal ini. <button class="pri" onclick="go('harian');tarik()">Tarik jadwal rutin</button></div>`}
+<div class="cards"><div class="card"><b>${a.length}</b><span>Pasien aktif</span></div><div class="card"><b>${c(i=>i.shift==='Pagi')}</b><span>Shift pagi</span></div><div class="card"><b>${c(i=>i.shift==='Siang')}</b><span>Shift siang</span></div><div class="card"><b>${c(i=>i.shift==='CITO')}</b><span>CITO 24 jam</span></div><div class="card"><b>${c(i=>i.lantai===1)}</b><span>Lantai 1</span></div><div class="card"><b>${c(i=>i.lantai===2)}</b><span>Lantai 2</span></div><div class="card"><b>${all.length-a.length}</b><span>Batal</span></div><div class="card"><b>${c(i=>i.jenis==='Tambahan')}</b><span>Tambahan</span></div><div class="card"><b>${c(i=>/HBS|HEP|HCV|ISO|\bTB\b/i.test(i.ket))}</b><span>Perlu isolasi/ket.</span></div></div>
+<div class="grid"><div class="card"><b>Asal pasien (hari ini)</b>${bar('Rajal',asal('Rajal'),a.length)}${bar('Ranap',asal('Ranap'),a.length)}${bar('IGD',asal('IGD'),a.length)}</div>
+<div class="card"><b>Keterisian (sesuai batas harian)</b>${['Pagi','Siang'].map(s=>[1,2].map(l=>bar(s+' L'+l,c(i=>i.shift===s&&i.lantai===l),lim(s,l))).join('')).join('')}</div></div>
+<div class="card"><div class="bar"><b>Rekap bulanan</b><input type="month" value="${mon}" onchange="mon=this.value;render()"></div>
+<div class="cards"><div class="card"><b>${tot}</b><span>Total sesi HD</span></div><div class="card"><b>${ms.length}</b><span>Hari terjadwal</span></div><div class="card"><b>${ma.Rajal}</b><span>Rajal</span></div><div class="card"><b>${ma.Ranap}</b><span>Ranap</span></div><div class="card"><b>${ma.IGD}</b><span>IGD</span></div><div class="card"><b>${mp.Pagi}/${mp.Siang}/${mp.CITO}</b><span>Pagi/Siang/CITO</span></div></div>
+${pdv.map(p=>bar('Tgl '+p[0],p[1],mx)).join('')||'<span class="mut">Belum ada data bulan ini.</span>'}</div>`}
+
+/* ---- Harian ---- */
+function blok(sh,l){const it=urut(J(cur).items.filter(i=>i.shift===sh&&i.lantai===l)),a=it.filter(i=>i.status!=='Batal'),n=a.length,c=CAP[l],z=cnt(a,l),ot=a.filter(i=>!isoOf(i.ket,l)&&/HBS|HEP|ISO|\bTB\b/i.test(i.ket||'')).length,bad=sh==='CITO'?ot>0:(z.r.some(x=>x.u>x.i)||z.reg>z.rt||ot>0||n>lim(sh,l));
+return `<div><div class="lh l${l}">Lantai ${l}<span style="${bad?'color:#c00':''}">${bad?'⚠ ':''}${sh==='CITO'?n+' pasien':n+'/'+lim(sh,l)}</span></div>${sh==='CITO'?'':`<small>Reguler ${z.reg}/${z.rt} · ${z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · ')}</small>`}${bad?`<small style="color:#c00">${ot?'Ada pasien HBsAg/ISO TB di lantai yang tidak punya ruang isolasinya. ':''}Periksa kapasitas: reguler maks ${z.rt}, isolasi melebihi batas di atas.</small>`:''}<table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}${i.jenis==='Tambahan'?' <b class="tb">+</b>':''}<small>${esc(i.rm)} · ${esc(i.asal)}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td><td class="np"><button onclick="ed('${i.id}')">✎</button> <button onclick="bt('${i.id}')">${i.status==='Batal'?'↺':'⊘'}</button> <button onclick="del('${i.id}')">🗑</button></td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}
+function vHarian(){const d=J(cur);
+return `<div class="bar np"><button class="pri" onclick="tarik()">⤓ Tarik jadwal rutin</button><button onclick="tambah()">＋ Tambah pasien</button><button onclick="cekForm()">🔍 Cek riwayat HD</button><button onclick="rilis()">✔ Tandai dirilis</button><button onclick="go('rilis')">🖨 Lihat/cetak rilis</button><button onclick="toggleSide()">${SIDE?'⇅ Bertumpuk':'⇄ Berdampingan'}</button><span class="mut">${d.rilis?'Dirilis '+new Date(d.rilis).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'Draf (tersimpan otomatis)'}</span></div>
+<div class="ph"><b>JADWAL HEMODIALISA — ${tgl(cur).toUpperCase()}</b><br>Instalasi Hemodialisa RSUD Welas Asih</div>
+${['Pagi','Siang'].map(s=>`<div class="card"><h3>Shift ${s}</h3>${stfBar(s)}<div class="grid${SIDE?' side':''}">${blok(s,1)}${blok(s,2)}</div></div>`).join('')}${J(cur).items.some(i=>i.shift==='CITO')?`<div class="card"><h3>CITO · layanan 24 jam</h3><div class="grid${SIDE?' side':''}">${blok('CITO',1)}${blok('CITO',2)}</div></div>`:''}`}
+function tarik(){const wd=pd(cur).getDay(),day=J(cur);let n=0;
+S.master.filter(m=>m.aktif!==false&&m.hari.includes(wd)).forEach(m=>{if(!day.items.some(i=>i.mid===m.id)){day.items.push({id:uid(),mid:m.id,nama:m.nama,rm:m.rm,asal:m.asal,shift:mSh(m,wd),lantai:m.lantai,ket:m.ket,jenis:'Rutin',status:'Aktif'});n++}});
+day.rilis=null;save();render();const ov=[];['Pagi','Siang'].forEach(x=>[1,2].forEach(l=>{if(jml(x,l)>lim(x,l))ov.push(x+' Lt.'+l)}));toast(n+' pasien rutin ditarik'+(ov.length?'. ⚠ Melebihi batas: '+ov.join(', '):''))}
+const fi=id=>J(cur).items.find(i=>i.id===id);
+function bt(id){const i=fi(id);if(i.status==='Batal'&&penuh(i.shift,i.lantai)){toast(msgPenuh(i.shift,i.lantai));return}i.status=i.status==='Batal'?'Aktif':'Batal';J(cur).rilis=null;save();render()}
+function del(id){const d=J(cur);d.items=d.items.filter(i=>i.id!==id);d.rilis=null;save();render()}
+function rilis(){J(cur).rilis=new Date().toISOString();save();render();toast('Jadwal ditandai sudah dirilis')}
+function tambah(){openForm('j',{nama:'',rm:'',asal:'Rajal',shift:'Pagi',lantai:1,ket:''})}
+function ed(id){openForm('j',fi(id))}
+
+/* ---- Rilis per shift ---- */
+function vRilis(){const col=l=>{const it=urut(act(cur).filter(i=>i.shift===RS&&i.lantai===l)),c=CAP[l],z=cnt(it,l);
+return `<div><div class="lh l${l}">LANTAI ${l}</div><table><tr class="th"><td>NO</td><td>NAMA</td>${RS==='CITO'?'<td>JAM</td>':''}<td>RM</td><td>Ket</td></tr>${it.map((i,x)=>`<tr class="r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}${i.asal==='Rajal'?'':`<span class="as">${i.asal.toUpperCase()}</span>`}</td>${RS==='CITO'?`<td>${fj(i.jam)}</td>`:''}<td>${esc(i.rm)}</td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td></tr>`).join('')}</table><div class="ft">Terisi ${it.length}${RS==='CITO'?' pasien CITO':'/'+c.t+' · Reguler '+z.reg+'/'+z.rt+' · '+z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · ')}</div></div>`};
+return `<div class="bar np"><button class="${RS==='Pagi'?'pri':''}" onclick="RS='Pagi';render()">Shift Pagi</button><button class="${RS==='Siang'?'pri':''}" onclick="RS='Siang';render()">Shift Siang</button><button class="${RS==='CITO'?'pri':''}" onclick="RS='CITO';render()">CITO (24 jam)</button><button onclick="window.print()">🖨 Cetak</button><button onclick="rilis()">✔ Tandai dirilis</button></div><div class="bar np" style="margin:4px 0"><button class="pri" onclick="rilisImg('all')">🖼 Simpan gambar</button><button onclick="rilisImg('per')">🖼 Per lantai (2 gambar)</button><button onclick="rilisImg('all',1)">📤 Bagikan</button></div><div class="mut np" style="margin-bottom:6px">Tombol gambar membuat foto jadwal berukuran besar dan tajam, jadi tidak perlu di-screenshot atau di-zoom, berapa pun jumlah pasiennya. Pasien batal tidak ditampilkan.</div>
+<div class="poster"><div class="ph2"><b>JADWAL HEMODIALISA — ${RS==='CITO'?'CITO (24 JAM)':'SHIFT '+RS.toUpperCase()}</b><br><b>${RS==='CITO'?'Layanan 24 jam · sesuai indikasi':'Pukul '+(RS==='Pagi'?'06.00':'12.15')+' WIB'}</b><br>${tgl(cur)}<br><small style="display:inline;color:#555">Instalasi Hemodialisa RSUD Welas Asih</small>${(()=>{const o=RS==='CITO'?{}:stf(cur,RS);return o.p1||o.p2?`<br><small style="display:inline;color:#555">Perawat jaga: Lt.1 = ${o.p1||0} · Lt.2 = ${o.p2||0} · Total ${(o.p1||0)+(o.p2||0)}</small>`:''})()}</div><div class="grid">${col(1)}${col(2)}</div><div class="lg"><span style="background:rgba(255,160,60,.3)">Ranap</span><span style="background:rgba(150,110,230,.3)">IGD</span><span class="k-hep">HBsAg</span><span class="k-hcv">HCV</span><span class="k-iso">ISO TB</span><span class="k-nr">Non Reguler</span></div><div class="cr" style="color:#555">Inovasi by: Epi Abdul Wahid</div></div>`}
+
+/* ---- Rilis sebagai gambar ---- */
+function shotCss(){let c='';document.querySelectorAll('style').forEach(e=>c+=e.textContent+'\n');
+const cut=(t,st)=>{let i;while((i=t.indexOf(st))>=0){let d=0,j=t.indexOf('{',i);for(;j<t.length;j++){if(t[j]==='{')d++;else if(t[j]==='}'){d--;if(d===0)break}}t=t.slice(0,i)+t.slice(j+1)}return t};
+c=cut(cut(c,'@media(prefers-color-scheme:dark)'),'@media print');c=c.replace(/:root\[data-theme="dark"\][^{]*\{[^}]*\}/g,'');
+return c+'.shotmode{max-width:none!important;width:100%;box-sizing:border-box;border-radius:0!important;padding:18px!important;margin:0!important}.shotmode .ph2{font-size:21px;line-height:1.35}.shotmode td{font-size:15px!important;padding:5px 8px!important;white-space:nowrap}.shotmode td:nth-child(2){white-space:normal}.shotmode .lh{font-size:18px;padding:8px 10px}.shotmode .k{font-size:13px!important;padding:2px 6px!important}.shotmode .as{display:inline!important;font-size:11px!important;margin-left:5px!important}.shotmode .ft{font-size:13px}.shotmode .lg{font-size:13px}'}
+async function rilisBlob(m){const src=document.querySelector('#main .poster');if(!src)throw new Error('poster');const W=m==='all'?1100:620;
+const cl=src.cloneNode(true);cl.classList.add('shotmode');
+if(m!=='all'){const g=cl.querySelector('.grid');[...g.children].forEach((c,i)=>{if(i+1!==m)c.remove()});g.style.gridTemplateColumns='1fr'}
+const hold=document.createElement('div');hold.style.cssText='position:fixed;left:-20000px;top:0;visibility:hidden;width:'+W+'px';hold.appendChild(cl);document.body.appendChild(hold);
+const H=Math.ceil(cl.getBoundingClientRect().height)+2,bs=getComputedStyle(document.body);
+cl.setAttribute('xmlns','http://www.w3.org/1999/xhtml');const html=new XMLSerializer().serializeToString(cl);hold.remove();
+const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'"><foreignObject x="0" y="0" width="'+W+'" height="'+H+'"><div xmlns="http://www.w3.org/1999/xhtml" style="width:'+W+'px;background:#fff;color:#1b2430;font-family:'+bs.fontFamily.replace(/"/g,"'")+';font-size:'+bs.fontSize+';line-height:'+bs.lineHeight+'"><style><![CDATA['+shotCss()+']]></style>'+html+'</div></foreignObject></svg>';
+const img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=()=>no(new Error('render'));img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+const sc=Math.min(2,8000/H),cv=document.createElement('canvas');cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.scale(sc,sc);cx.drawImage(img,0,0);
+return await new Promise((ok,no)=>cv.toBlob(b=>b?ok(b):no(new Error('blob')),'image/png'))}
+async function rilisImg(mode,share){try{toast('Membuat gambar…');const ms=mode==='per'?[1,2]:['all'],files=[];
+for(const m of ms){const b=await rilisBlob(m);files.push(new File([b],'Rilis-HD-'+RS+'-'+cur+(m==='all'?'':'-Lt'+m)+'.png',{type:'image/png'}))}
+if(share&&navigator.canShare&&navigator.canShare({files})){await navigator.share({files,title:'Jadwal HD '+RS+' '+tgl(cur)});return}
+files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)},i*700));
+toast('Gambar tersimpan ('+files.length+' file). Cek folder Download / Galeri.')}
+catch(e){if(e&&e.name==='AbortError')return;toast('Gagal membuat gambar di perangkat ini. Pakai Cetak lalu Simpan PDF.')}}
+
+/* ---- Tempel banyak pasien tetap ---- */
+const normKet=k=>!k?'':/HCV/i.test(k)?'HCV':/HBS|HEP/i.test(k)?'HBsAg':/ISO|\bTB\b/i.test(k)?'ISO TB':/NON\s*REG/i.test(k)?'Non Reguler':k;
+function bulkParse(t){return t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+let c=l.includes('\t')?l.split('\t').map(x=>x.trim()):null;
+if(!c){const m=l.match(/^(?:\d+\s+)?(.*?)\s+(\d[\d\-\/]*)\s*(.*)$/);c=m?[m[1],m[2],m[3]]:[l,'','']}
+if(/^\d+$/.test(c[0])&&c.length>2)c.shift();
+return{nama:c[0]||'',rm:c[1]||'',ket:normKet(c.slice(2).filter(Boolean).join(' ').trim())}}).filter(r=>r.nama&&!/^(nama|no)$/i.test(r.nama))}
+function bulkForm(){$('#dlg').innerHTML=`<h3>Tempel banyak pasien tetap</h3>
+<small>Salin kolom NAMA, RM (dan Ket jika ada) dari Sheets, tempel di kotak. Kolom NO otomatis diabaikan. Pasien yang RM-nya sudah ada hanya ditambah harinya.</small>
+<label>Hari tetap</label><div class="days">${[1,2,3,4,5,6,0].map(d=>`<label><input type="checkbox" class="bh" value="${d}">${HARI[d]}</label>`).join('')}</div>
+<div class="r2"><label>Shift<select id="b_shift">${sel(['Pagi','Siang'],'Pagi')}</select></label><label>Lantai<select id="b_lantai">${sel([1,2],1)}</select></label></div>
+<label>Asal<select id="b_asal">${sel(['Rajal','Ranap','IGD'],'Rajal')}</select></label>
+<label>Data<textarea id="b_txt" rows="8" oninput="bulkPrev()" style="width:100%;box-sizing:border-box;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px"></textarea></label>
+<div id="b_prev" class="mut"></div>
+<div class="r2"><button onclick="$('#dlg').close()">Batal</button><button class="pri" onclick="bulkOk()">Simpan</button></div>`;$('#dlg').showModal()}
+function bulkPrev(){const r=bulkParse($('#b_txt').value),ada=new Set(S.master.map(m=>m.rm).filter(Boolean)),dup=r.filter(x=>x.rm&&ada.has(x.rm)).length,nr=r.filter(x=>!x.rm).length;
+$('#b_prev').innerHTML=r.length?`<b>${r.length}</b> pasien terbaca${dup?` · ${dup} sudah ada (hari ditambah)`:''}${nr?` · ${nr} tanpa RM`:''}<br>${r.slice(0,3).map(x=>esc(x.nama)+' ('+esc(x.rm||'-')+')'+(x.ket?' ['+esc(x.ket)+']':'')).join('<br>')}${r.length>3?'<br>…':''}`:''}
+function bulkOk(){const hari=[...document.querySelectorAll('.bh:checked')].map(x=>+x.value);if(!hari.length){toast('Pilih minimal satu hari');return}
+const r=bulkParse($('#b_txt').value);if(!r.length){toast('Belum ada data');return}
+let n=0,u=0;
+r.forEach(x=>{const ex=x.rm&&S.master.find(m=>m.rm===x.rm);
+if(ex){hari.forEach(h=>{if(!ex.hari.includes(h))ex.hari.push(h)});u++;return}
+S.master.push({id:uid(),aktif:true,nama:x.nama,rm:x.rm,asal:$('#b_asal').value,shift:$('#b_shift').value,lantai:+$('#b_lantai').value,ket:x.ket,hari:hari.slice()});n++});
+save();$('#dlg').close();render();toast(n+' pasien baru'+(u?', '+u+' diperbarui harinya':''))}
+
+/* ---- Pasien tetap ---- */
+let MQ='';let MSIDE;try{MSIDE=localStorage.getItem('hd_mside')!=='0'}catch(e){MSIDE=true}
+function toggleMSide(){MSIDE=!MSIDE;try{localStorage.setItem('hd_mside',MSIDE?'1':'0')}catch(e){}render()}
+const mSh=(m,d)=>(m.jd&&m.jd[d]&&m.jd[d].shift)||m.shift;
+const mInfo=p=>p.hari.some(h=>mSh(p,h)!==p.shift)?p.hari.map(h=>HARI[h]+' '+mSh(p,h)).join(', ')+' · L'+p.lantai:p.hari.map(h=>HARI[h]).join(', ')+' · '+p.shift+' L'+p.lantai;
+const HF=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],mAk=p=>p.aktif!==false;
+function mRows(){const q=MQ.trim().toLowerCase(),qd=q.replace(/\D/g,'');
+const all=S.master.filter(p=>!q||String(p.nama).toLowerCase().includes(q)||String(p.rm||'').toLowerCase().includes(q)||(qd.length>=3&&String(p.rm||'').replace(/\D/g,'').includes(qd)));
+const nm=(a,b)=>String(a.nama).localeCompare(String(b.nama)),shown=new Set(),sd=MSIDE?' side':'';
+const item=(p,no)=>`<div class="mp" style="${mAk(p)?'':'opacity:.5'}"><span class="no">${mAk(p)?no:'–'}</span><div class="mi"><b>${esc(p.nama)}</b> ${p.ket?`<span class="k ${kc(p.ket)}">${esc(p.ket)}</span>`:''}<small>${esc(p.rm)} · ${esc(p.asal)} · ${mInfo(p)}</small><div class="ma"><button onclick="openForm('m',S.master.find(x=>x.id==='${p.id}'))">✎</button><button onclick="aktifM('${p.id}')">${mAk(p)?'⏸':'▶'}</button><button onclick="delM('${p.id}',this)">🗑</button></div></div></div>`;
+const act1=l=>new Set(all.filter(p=>+p.lantai===l&&mAk(p)).map(p=>p.id)).size;
+let h=`<div class="mg2${sd}"><div class="glh glh1">LANTAI 1 · ${act1(1)} pasien aktif</div><div class="glh glh2">LANTAI 2 · ${act1(2)} pasien aktif</div></div>`,any=false;
+[1,2,3,4,5,6,0].forEach(d=>['Pagi','Siang'].forEach(sh=>{
+const g=l=>all.filter(p=>+p.lantai===l&&(p.hari||[]).includes(d)&&mSh(p,d)===sh).sort((a,b)=>mAk(b)-mAk(a)||nm(a,b)),g1=g(1),g2=g(2);if(!g1.length&&!g2.length)return;any=true;
+const cell=(l,gg)=>{const na=gg.filter(mAk).length,t=CAP[l].t;let no=0;return `<div class="mc"><div class="ch">Lt.${l} · ${na} pasien${na>t?` · <span style="color:#c00">⚠ melebihi ${t}</span>`:''}${gg.length>na?' · '+(gg.length-na)+' nonaktif':''}</div>${gg.map(p=>{if(mAk(p))no++;shown.add(p.id);return item(p,no)}).join('')||'<div class="mut" style="padding:4px 2px">—</div>'}</div>`};
+h+=`<div class="gh2">${HF[d]} · ${sh}</div><div class="mg2${sd}">${cell(1,g1)}${cell(2,g2)}</div>`}));
+if(!any)h+=`<div class="mut" style="padding:8px 2px">${q?'Tidak ada yang cocok.':'Belum ada pasien tetap.'}</div>`;
+const rest=all.filter(p=>!shown.has(p.id)).sort(nm);
+if(rest.length){h+=`<div class="gh2">Belum ada hari/lantai yang valid · ${rest.length} pasien</div>`+rest.map((p,i)=>item(p,i+1)).join('')}
+return{n:all.length,h}}
+const mCnt=n=>{if(MQ.trim())return n+' dari '+S.master.length+' pasien';const a=S.master.filter(mAk),c=l=>a.filter(p=>+p.lantai===l).length;return a.length+' pasien aktif · Lt.1: '+c(1)+' · Lt.2: '+c(2)};
+function mCari(v){MQ=v;const r=mRows();$('#mtb').innerHTML=r.h;$('#mcnt').textContent=mCnt(r.n)}
+function vMaster(){const r=mRows();
+return `<div class="stk np"><div class="bar" style="margin:0"><button class="pri" onclick="openForm('m',{nama:'',rm:'',asal:'Rajal',shift:'Pagi',lantai:1,ket:'',hari:[1,3,5]})">＋ Pasien tetap</button><button onclick="bulkForm()">📋 Tempel banyak</button><button onclick="toggleMSide()">${MSIDE?'⇅ Bertumpuk':'⇄ Berdampingan'}</button>${S.seeded?'<button onclick="hapusContoh()">Hapus data contoh</button>':''}<span class="mut" id="mcnt">${mCnt(r.n)}</span></div>
+<input id="mq" type="search" placeholder="🔍 Cari cepat: nama atau No. RM…" value="${esc(MQ)}" oninput="mCari(this.value)" autocomplete="off" style="width:100%;box-sizing:border-box;margin-top:6px;padding:9px 10px"></div>
+<div class="card"><div id="mtb">${r.h}</div></div>`}
+function aktifM(id){const m=S.master.find(x=>x.id===id);m.aktif=m.aktif===false;save();render()}
+function delM(id,b){if(b.dataset.s){S.master=S.master.filter(x=>x.id!==id);save();render()}else{b.dataset.s=1;b.textContent='Yakin?'}}
+function hapusRiwayat(k){if(!confirm('Hapus jadwal '+tgl(k)+'? Data tanggal ini hilang permanen. Disarankan Cadangkan (.json) dulu.'))return;delete S.jadwal[k];save();render()}
+function kosongkanRiwayat(){const n=Object.keys(S.jadwal).length;if(!n)return;if(!confirm('Hapus SEMUA riwayat jadwal harian ('+n+' tanggal)? Pasien Tetap tidak ikut terhapus. Tidak bisa dibatalkan — disarankan Cadangkan (.json) dulu.'))return;if(!confirm('Yakin? Semua riwayat jadwal harian akan dikosongkan.'))return;S.jadwal={};save();render()}
+function hapusContoh(){S.master=[];S.jadwal={};S.seeded=false;save();render()}
+
+/* ---- Riwayat ---- */
+function rDetail(k){const d=S.jadwal[k];if(!d)return `<div class="card">Tidak ada layanan HD tercatat pada <b>${tgl(k)}</b>.</div>`;
+return `<div class="card"><b>${tgl(k)}</b><small>${act(k).length} pasien aktif · ${d.rilis?'dirilis':'draf'}</small><div class="bar"><button onclick="cur='${k}';V='harian';render()">Buka</button><button onclick="cur='${k}';V='rilis';render()">🖨 Rilis</button></div></div>`+['Pagi','Siang','CITO'].filter(sh=>sh!=='CITO'||(d.items||[]).some(i=>i.shift==='CITO')).map(sh=>{const it=urut((d.items||[]).filter(i=>i.shift===sh));return `<div class="card"><h3>${sh==='CITO'?'CITO (24 jam)':'Shift '+sh} · ${it.filter(i=>i.status!=='Batal').length} pasien</h3><table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}<small>${esc(i.rm)} · ${esc(i.asal)} · Lt.${i.lantai}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}).join('')}
+function vRiwayat(){const ks=Object.keys(S.jadwal).sort().reverse();
+return `<div class="bar"><button onclick="backup()">⬇ Cadangkan (.json)</button>${ks.length?'<button onclick="kosongkanRiwayat()" style="color:#c00">🗑 Kosongkan semua riwayat</button>':''}<label class="mut">Pulihkan: <input type="file" accept=".json" onchange="restore(this.files[0])"></label></div>
+<div class="card"><div class="bar"><label class="mut">🔍 Cari tanggal layanan HD <input type="date" value="${RQ}" onchange="RQ=this.value;render()"></label>${RQ?`<button onclick="RQ='';render()">✕ Hapus pencarian</button>`:''}</div><small>Pilih tanggal, jadwal HD hari itu langsung tampil.</small></div>
+${RQ?rDetail(RQ):`<div class="card"><table>${ks.map(k=>{const d=S.jadwal[k];return `<tr><td>${tgl(k)}<small>${act(k).length} pasien aktif · ${d.rilis?'dirilis':'draf'}</small></td><td><button onclick="cur='${k}';V='harian';render()">Buka</button> <button onclick="cur='${k}';V='rilis';render()">🖨 Rilis</button>
+ <button onclick="hapusRiwayat('${k}')" style="color:#c00">🗑 Hapus</button></td></tr>`}).join('')||'<tr><td class="mut">Belum ada riwayat jadwal.</td></tr>'}</table></div>`}`}
+
+/* ---- Cek riwayat HD terakhir (pasien belum tetap) ---- */
+const TELAT=5; /* jumlah hari tanpa HD yang ditandai merah — ubah sesuai kebijakan unit */
+/* RM dibakukan jadi 8 digit: 2 digit kode (00/01) + 6 digit nomor. 6 digit = kode 00 dihilangkan; 7 digit = kode 01 ditulis '1' tanpa nol. */
+const rn=x=>{const d=String(x??'').replace(/\D/g,'');return !d?'':d.length<=6?'00'+d.padStart(6,'0'):d.length===7?'0'+d:d};
+const tg2=s=>pd(s).toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+function hdInfo(raw){const k=rn(raw);if(!k)return '';const today=ymd(new Date()),hits=[];
+Object.keys(S.jadwal).sort().reverse().forEach(d=>{if(d>today)return;(S.jadwal[d].items||[]).forEach(i=>{if(rn(i.rm)===k&&i.status!=='Batal')hits.push({d,i})})});
+const man=Object.values(S.lastHD||{}).filter(x=>rn(x.rm)===k).sort((a,b)=>b.tgl.localeCompare(a.tgl))[0],m=S.master.find(x=>rn(x.rm)===k);let last=hits[0]?.d,src='jadwal';
+if(man&&(!last||man.tgl>last)){last=man.tgl;src='manual'}
+const nama=hits[0]?.i.nama||man?.nama||m?.nama||'';
+const tetap=m?`<div class="mut">Sudah pasien tetap: ${mInfo(m)}${m.aktif===false?' (nonaktif)':''}</div>`:'';
+if(!last)return `<div class="card" style="margin-top:8px">${nama?'<b>'+esc(nama)+'</b><br>':''}Belum ada riwayat HD tercatat untuk RM ini. Isi tanggal HD terakhir secara manual di bawah bila ada.${tetap}</div>`;
+const n=Math.round((pd(today)-pd(last))/864e5),tl=n>=TELAT;
+const hr=n===0?'hari ini':n===1?'kemarin':n+' hari yang lalu';
+return `<div class="card" style="margin-top:8px">${nama?'<b>'+esc(nama)+'</b><br>':''}HD terakhir: <b>${tg2(last)}</b>${src==='manual'?' <small style="display:inline">(dicatat manual)</small>':''}<div style="font-size:20px;font-weight:700;${tl?'color:#c00':''}">${hr}</div>${tl?'<small style="color:#c00">⚠ Sudah ≥ '+TELAT+' hari sejak HD terakhir</small>':''}
+${hits.length?`<small>Riwayat terakhir: ${hits.slice(0,5).map(h=>tg2(h.d).replace(/ \d{4}$/,'')+' ('+h.i.shift+' L'+h.i.lantai+')').join(' · ')}</small>`:''}${tetap}
+<small>Berdasarkan jadwal yang tercatat di aplikasi (yang dibatalkan tidak dihitung); bukan bukti sesi benar-benar dijalani.</small></div>`}
+function cekForm(){$('#dlg').innerHTML=`<h3>Cek riwayat HD terakhir</h3>
+<small>Untuk pasien yang belum dijadwalkan tetap. Ketik No. RM, hasil muncul otomatis. Jumlah hari dihitung dari hari ini.</small>
+<label>No. RM<input id="c_rm" autocomplete="off" oninput="cekRun()"></label>
+<div id="c_res"></div>
+<details style="margin-top:8px"><summary class="mut">Catat tanggal HD terakhir manual (mis. HD di luar / sebelum aplikasi dipakai)</summary>
+<label>Tanggal HD terakhir<input id="c_tgl" type="date" max="${ymd(new Date())}"></label><label>Nama (opsional)<input id="c_nm"></label>
+<div class="r2"><span></span><button onclick="cekSimpan()">Simpan catatan</button></div></details>
+<div class="r2"><span></span><button class="pri" onclick="$('#dlg').close()">Tutup</button></div>`;$('#dlg').showModal();setTimeout(()=>$('#c_rm').focus(),50)}
+function cekRun(){$('#c_res').innerHTML=hdInfo($('#c_rm').value)}
+function cekSimpan(){const rm=$('#c_rm').value.trim(),t=$('#c_tgl').value,k=rn(rm);if(!k){toast('Isi No. RM dulu');return}if(!t){toast('Isi tanggal HD terakhir');return}
+S.lastHD=S.lastHD||{};S.lastHD[k]={rm,nama:$('#c_nm').value.trim(),tgl:t};save();cekRun();toast('Tanggal HD terakhir dicatat')}
+function fHint(){const e=$('#f_hint');if(e)e.innerHTML=hdInfo($('#f_rm').value)}
+
+/* ---- Auto-lengkapi Nama <-> RM (pasien non-reguler) ---- */
+let RQ='',FS=[],FAn=false,FAr=false;
+function dirPasien(){const today=ymd(new Date()),M=new Map();
+const add=(rm,nama,tgl)=>{rm=String(rm||'').trim();nama=String(nama||'').trim();if(!rm||!nama)return;const k=rn(rm)+'|'+nama.toLowerCase();let e=M.get(k);if(!e){e={rm,nama,last:''};M.set(k,e)}if(tgl&&tgl>e.last)e.last=tgl};
+S.master.forEach(m=>add(m.rm,m.nama));
+Object.keys(S.jadwal).forEach(d=>(S.jadwal[d].items||[]).forEach(i=>add(i.rm,i.nama,i.status!=='Batal'&&d<=today?d:'')));
+Object.values(S.lastHD||{}).forEach(x=>add(x.rm,x.nama,x.tgl));
+return [...M.values()]}
+function fCari(src){const n=$('#f_nama'),r=$('#f_rm'),box=$('#f_sug');if(!box)return;
+if(src==='rm')FAr=false;else FAn=false;
+const clr=()=>{if(src==='rm'&&FAn){n.value='';FAn=false}if(src==='nama'&&FAr){r.value='';FAr=false}};
+const qd=r.value.replace(/\D/g,''),q=src==='rm'?rn(r.value):n.value.trim().toLowerCase(),today=ymd(new Date());
+if((src==='rm'?qd.length:q.length)<(src==='rm'?3:2)){clr();box.innerHTML='';fHint();return}
+const L=dirPasien().filter(e=>src==='rm'?rn(e.rm).includes(qd):e.nama.toLowerCase().includes(q));
+const ex=L.filter(e=>src==='rm'?rn(e.rm)===q:e.nama.toLowerCase()===q);
+if(ex.length===1){if(src==='rm'){if(!n.value.trim()||FAn){n.value=ex[0].nama;FAn=true}}else{if(!r.value.trim()||FAr){r.value=ex[0].rm;FAr=true}}
+if(L.length===1){box.innerHTML='';fHint();return}}else clr();
+L.sort((a,b)=>(b.last||'').localeCompare(a.last||'')||a.nama.localeCompare(b.nama,'id'));FS=L.slice(0,6);
+if(!FS.length){box.innerHTML='';fHint();return}
+const hd=ex.length>1?`<small style="color:#b45309">Ada ${ex.length} pasien dengan ${src==='rm'?'RM':'nama'} ini — pilih yang benar:</small>`:'<small>Ketuk bila sesuai:</small>';
+box.innerHTML=hd+FS.map((e,x)=>{const dn=e.last?Math.round((pd(today)-pd(e.last))/864e5):null;return `<button type="button" class="sg" onclick="fPick(${x})">${esc(e.nama)} · ${esc(e.rm)}<small>${e.last?'HD terakhir '+tg2(e.last)+' ('+(dn===0?'hari ini':dn+' hari lalu')+')':'belum ada riwayat HD'}</small></button>`}).join('');fHint()}
+function fPick(i){const e=FS[i];if(!e)return;$('#f_nama').value=e.nama;$('#f_rm').value=e.rm;FAn=FAr=false;$('#f_sug').innerHTML='';fHint()}
+
+/* ---- Form ---- */
+function openForm(mode,o){FM={mode,id:o.id};FAn=FAr=false;const m=mode==='m';
+$('#dlg').innerHTML=`<h3>${m?'Pasien tetap':(o.id?'Ubah jadwal pasien':'Tambah pasien (non-reguler)')}</h3>
+<label>Nama<input id="f_nama" value="${esc(o.nama)}" ${m?'':'oninput="fCari(\'nama\')" autocomplete="off"'}></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" ${m?'':'oninput="fCari(\'rm\');fHint()" autocomplete="off"'}></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}
+<div class="r2"><label>Asal<select id="f_asal">${sel(['Rajal','Ranap','IGD'],o.asal)}</select></label><label>${m?'Shift utama':'Shift'}<select id="f_shift"${m?' onchange="fSh0()"':' onchange="fJam()"'}>${sel(m?['Pagi','Siang']:['Pagi','Siang','CITO'],o.shift)}</select></label></div>
+<div class="r2"><label>Lantai<select id="f_lantai">${sel([1,2],o.lantai)}</select></label><label>Ket<input id="f_ket" list="kets" value="${esc(o.ket)}"></label></div>
+${m?'':`<label id="f_jamw" style="${o.shift==='CITO'?'':'display:none'}">Jam layanan CITO<input type="time" id="f_jam" value="${esc(o.jam||'')}"></label>`}
+<datalist id="kets"><option>HBsAg</option><option>HCV</option><option>ISO TB</option><option>Non Reguler</option></datalist>
+${m?`<label>Hari tetap <small>(centang hari; shift tiap hari bisa berbeda)</small></label><div class="dys">${[1,2,3,4,5,6,0].map(d=>`<div class="dr"><label><input type="checkbox" class="fh" value="${d}" ${o.hari.includes(d)?'checked':''} onchange="fHr(${d})">${HARI[d]}</label><select class="fs" id="fs${d}" ${o.hari.includes(d)?'':'disabled'}>${sel(['Pagi','Siang'],mSh(o,d))}</select></div>`).join('')}</div>`:''}
+<div class="r2"><button onclick="$('#dlg').close()">Batal</button><button class="pri" onclick="okForm()">Simpan</button></div>`;
+$('#dlg').showModal()}
+function fJam(){const w=$('#f_jamw');if(w)w.style.display=$('#f_shift').value==='CITO'?'':'none'}
+function fHr(d){const c=document.querySelector('.fh[value="'+d+'"]');$('#fs'+d).disabled=!c.checked}
+function fSh0(){const v=$('#f_shift').value;document.querySelectorAll('.fs').forEach(x=>x.value=v)}
+function okForm(){const g=i=>$('#f_'+i).value.trim(),nama=g('nama');if(!nama){$('#f_nama').focus();return}
+const d={nama,rm:g('rm'),asal:g('asal'),shift:g('shift'),lantai:+g('lantai'),ket:g('ket')};if(FM.mode!=='m')d.jam=d.shift==='CITO'?($('#f_jam')?$('#f_jam').value:''):'';
+if(FM.mode==='m'){d.hari=[...document.querySelectorAll('.fh:checked')].map(x=>+x.value);d.jd={};d.hari.forEach(h=>{const v=$('#fs'+h).value;if(v!==d.shift)d.jd[h]={shift:v}});const m=S.master.find(x=>x.id===FM.id);if(m)Object.assign(m,d);else S.master.push({id:uid(),aktif:true,...d})}
+else{const day=J(cur),i=day.items.find(x=>x.id===FM.id);if((!i||(i.status!=='Batal'&&(i.shift!==d.shift||i.lantai!==d.lantai)))&&penuh(d.shift,d.lantai,FM.id)){toast(msgPenuh(d.shift,d.lantai));return}if(i)Object.assign(i,d);else day.items.push({id:uid(),...d,ket:d.ket||'Non Reguler',jenis:'Tambahan',status:'Aktif'});day.rilis=null}
+save();$('#dlg').close();render()}
+/* ---- Pendaftaran HD rawat inap ---- */
+let PEND=[],pLast=0,seen=null,RT='form',FOTO=[],MINE=[],WAMSG='',OLD=null,LK={},lkT=null,PF='belum';
+const ST_TETAP='Pasien dialisis, sudah punya jadwal tetap',ST_BARU='Pasien belum punya jadwal tetap';
+const isBaru=p=>!String(p.status||'').includes('sudah punya');
+const gv=id=>($('#'+id)||{}).value||'';
+const shw=(id,b)=>{const e=$('#'+id);if(e)e.style.display=b?'':'none'};
+const sl=(id,o,ph='Pilih…')=>`<select id="${id}" onchange="pTog()"><option value="">${ph}</option>${o.map(x=>`<option>${x}</option>`).join('')}</select>`;
+const RK=['Reaktif','Non Reaktif'];
+const DPJPS=['dr. Muhammad Fitriandi Budiman, Sp.PD., Subsp.G.H. (K)','dr. Apen Afgani, Sp.PD., M.Kes'];
+/* rujukan dewasa umum; ubah angka di sini bila rujukan lab RS berbeda */
+const REF={hb:{n:'Hb',u:'g/dL',L:[13,17.5],P:[12,16]},trom:{n:'Trombosit',u:'ribu/µL',a:[150,450]},ur:{n:'Ureum',u:'mg/dL',a:[10,50]},kr:{n:'Kreatinin',u:'mg/dL',L:[0.7,1.3],P:[0.5,1.1]},na:{n:'Natrium',u:'mmol/L',a:[135,145]},k:{n:'Kalium',u:'mmol/L',a:[3.5,5.0]}};
+const jkc=j=>j==='Laki-laki'?'L':j==='Perempuan'?'P':'';
+function abn(k,val,jk){const r=REF[k],x=parseFloat(String(val).replace(',','.'));if(isNaN(x))return false;const g=r.a||r[jk]||[Math.min(r.L[0],r.P[0]),Math.max(r.L[1],r.P[1])];return x<g[0]||x>g[1]}
+function pUsia(s){if(!s)return'';const d=new Date(s),n=new Date();let y=n.getFullYear()-d.getFullYear(),m=n.getMonth()-d.getMonth();if(n.getDate()<d.getDate())m--;if(m<0){y--;m+=12}return y>=0?y+' th '+m+' bln':''}
+const tglS=s=>{if(!s)return'';const[a,b,c]=String(s).slice(0,10).split('-').map(Number);return new Date(a,b-1,c).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})};
+const rkS=v=>v==='Reaktif'?'<b class="rk">Reaktif</b>':esc(v||'-');
+const isC=p=>String(p.waktu||'').startsWith('Segera');
+const ketOf=p=>[isC(p)?'CITO':'',p.hbs==='Reaktif'?'HBsAg':'',p.hcv==='Reaktif'?'HCV':'',p.ruang].filter(Boolean).join(' · ');
+
+/* -- Sisi ruangan -- */
+function renderRg(){$('#rg').innerHTML=`<div class="rstk"><div class="rtop"><div style="display:flex;align-items:center"><img class="lgi hl" src="${LOGO}" alt=""><div><b>Ruangan: ${esc(ME.nama)}</b><small>Pendaftaran Dialisis · RSUD Welas Asih</small></div></div><button onclick="logout()">Keluar</button></div><nav><button class="${RT==='form'?'on':''}" onclick="RT='form';renderRg()">Form Pendaftaran</button><button class="${RT==='saya'?'on':''}" onclick="RT='saya';renderRg();mineLoad()">Pendaftaran Saya</button></nav></div>${RT==='form'?pForm():pSaya()}<div class="cr">Inovasi by: Epi Abdul Wahid</div>`;if(RT==='form')pTog()}
+function pForm(){const t=ymd(new Date());return `<div class="card"><h3>A. Permintaan HD</h3>
+<label>Waktu HD${sl('g_waktu',['Pagi (06.00)','Siang (12.15)','Segera / Cito HD'])}</label>
+<label>Tanggal HD<input id="g_tgl" type="date" min="${t}" value="${t}"></label>
+<div id="x_cito" style="display:none"><label>Indikasi Cito (wajib)${sl('g_cito',['Hiperkalemia','Edema paru','Asidosis','Alasan lain (tulis manual)'])}</label><div id="x_cito2" style="display:none"><label>Tuliskan alasan Cito<input id="g_cito2"></label></div></div></div>
+<div class="card"><h3>B. Identitas pasien</h3>
+<label>Status pasien${sl('g_status',[ST_TETAP,ST_BARU])}</label>
+<div id="x_tetap" class="note" style="display:none">Pasien jadwal tetap: yang wajib hanya Waktu HD, Tanggal HD, dan identitas (nama, No. RM, jenis kelamin, tanggal lahir, ruangan). DPJP, diagnosa, informed consent, data penunjang, dan program HD tetap tersedia dan sebaiknya diisi bila datanya ada, tetapi boleh dikosongkan; pendaftaran tetap bisa dikirim.</div>
+<small>Ketik nama atau No. RM. Jika pasien pernah terdaftar, identitas terisi otomatis.</small>
+<label>Nama pasien<input id="g_nama" autocomplete="off" oninput="lkQ('n')"></label><div id="lk_n"></div>
+<div class="r2"><label>No. RM<input id="g_rm" inputmode="tel" autocomplete="off" oninput="lkQ('r')"></label><label>Jenis kelamin${sl('g_jk',['Laki-laki','Perempuan'])}</label></div><div id="lk_r"></div>
+<label>Tanggal lahir<input id="g_lahir" type="date" onchange="pTog()"></label><small>Usia: <b id="usia">-</b></small>
+<div class="r2"><label>Asal<input value="RANAP (Rawat Inap)" disabled></label><label>Ruangan<input id="g_ruang" value="${esc(ME?ME.nama:'')}"></label></div>
+<label>DPJP pengirim${sl('g_dpjp',DPJPS)}</label><label>Diagnosa medis<input id="g_dx"></label>
+<label><input type="checkbox" id="g_ic">Informed consent HD sudah diberikan dan ditandatangani</label></div>
+<div class="card"><h3>C. Data penunjang terakhir <span id="x_oc" style="font-weight:400;font-size:12px;color:var(--mut)"></span></h3>
+<label>Foto thorax${sl('g_thorax',['Ada','Tidak ada'])}</label>
+<div id="x_thx" style="display:none"><label>Hasil / kesan thorax<textarea id="g_thx" rows="3"></textarea></label></div>
+<label style="margin-top:12px">Lab skrining HD <b id="x_skr"></b></label>
+<div id="x_old" class="note" style="display:none"></div>
+<div class="r3"><label>HBsAg${sl('g_hbs',RK)}</label><label>Anti HIV${sl('g_hiv',RK)}</label><label>Anti HCV${sl('g_hcv',RK)}</label></div>
+<div id="x_fup"><label>Upload hasil lab skrining <b id="x_foto_req"></b></label><small>Wajib untuk pasien yang belum punya jadwal tetap. Untuk pasien jadwal tetap boleh dilewati, tetapi sebaiknya dilampirkan bila ada.</small><div class="r2"><button type="button" onclick="$('#g_cam').click()">📷 Ambil foto</button><button type="button" onclick="$('#g_foto').click()">🖼 Galeri / screenshot</button></div><input id="g_cam" type="file" accept="image/*" capture="environment" style="display:none" onchange="pFoto(this)"><input id="g_foto" type="file" accept="image/*" multiple style="display:none" onchange="pFoto(this)"><small id="x_fcnt"></small><div id="th"></div></div>
+<label style="margin-top:12px"><input type="checkbox" id="g_lab" onchange="pTog()">Ada lab lainnya</label>
+<div id="x_lab" style="display:none"><div class="r3">${Object.keys(REF).map(k=>`<label>${REF[k].n} <small style="display:inline">${REF[k].u}</small><input id="l_${k}" inputmode="decimal" oninput="pTog()"></label>`).join('')}</div><small>Merah = di luar rujukan dewasa umum.</small></div></div>
+<div class="card"><h3>D. Program HD / advice DPJP <span id="x_od" style="font-weight:400;font-size:12px;color:var(--mut)"></span></h3>
+<div class="r2"><label>UF (liter)<input id="g_uf" inputmode="decimal"></label><label>Time dialisis (jam)<input id="g_time" inputmode="decimal"></label></div>
+<label>QB (ml/mnt)<input id="g_qb" inputmode="numeric"></label>
+<label>Heparin${sl('g_hep',['Free heparin','Standar','Minimal'])}</label>
+<label>Transfusi darah${sl('g_trf',['Ya','Tidak'])}</label>
+<div id="x_trf" style="display:none"><div class="r2"><label>Jumlah kantong<input id="g_trfn" inputmode="numeric"></label><label>Stok darah${sl('g_trfs',['Sudah tersedia','Belum tersedia'])}</label></div></div>
+<div class="r2"><label>Akses vaskular <span style="color:#d32f2f">(femoral tidak disarankan)</span>${sl('g_akses',['AV-Shunt (permanen)','CDL','Femoral'])}</label><label>Status akses${sl('g_aksesst',['Sudah terpasang','Belum terpasang'])}</label></div></div>
+<div class="err" id="err"></div><button class="pri big" id="kb" onclick="pKirim()">Kirim pendaftaran</button>`}
+function pTog(){const c=gv('g_waktu').startsWith('Segera'),baru=gv('g_status')===ST_BARU,pakaiLama=!!(OLD&&OLD.foto>0&&$('#g_useold')&&$('#g_useold').checked);
+shw('x_cito',c);shw('x_cito2',c&&gv('g_cito').startsWith('Alasan'));
+const t=$('#g_tgl');if(t){if(c){t.value=ymd(new Date());t.disabled=true}else t.disabled=false}
+shw('x_tetap',gv('g_status')===ST_TETAP);{const ot=gv('g_status')===ST_TETAP?'(tidak wajib, isi bila ada)':'';const a=$('#x_oc'),b=$('#x_od');if(a)a.textContent=ot;if(b)b.textContent=ot}shw('x_thx',gv('g_thorax')==='Ada');shw('x_lab',$('#g_lab')&&$('#g_lab').checked);shw('x_trf',gv('g_trf')==='Ya');
+$('#usia').textContent=pUsia(gv('g_lahir'))||'-';
+$('#x_skr').textContent=baru?'(wajib diisi)':gv('g_status')?'(tidak wajib untuk pasien jadwal tetap, isi bila ada)':'';
+$('#x_foto_req').textContent=baru?(pakaiLama?'(memakai lampiran hasil sebelumnya)':'(WAJIB untuk pasien belum punya jadwal tetap)'):gv('g_status')?'(tidak wajib, lampirkan bila ada)':'';
+['g_hbs','g_hiv','g_hcv'].forEach(i=>{const e=$('#'+i);e.classList.toggle('rk',e.value==='Reaktif');e.classList.toggle('nr',e.value==='Non Reaktif')});
+Object.keys(REF).forEach(k=>{const e=$('#l_'+k);if(e)e.classList.toggle('ab',abn(k,e.value,jkc(gv('g_jk'))))});
+$('#th').innerHTML=FOTO.map((f,i)=>`<span style="position:relative;display:inline-block"><img src="${f}"><button type="button" onclick="fotoDel(${i})" style="position:absolute;top:2px;right:6px;padding:0 6px;border-radius:10px">✕</button></span>`).join('');const fc=$('#x_fcnt');if(fc)fc.textContent=FOTO.length?FOTO.length+' / 4 foto terlampir':'Maksimal 4 foto (kamera atau galeri).'}
+function fotoDel(i){FOTO.splice(i,1);pTog()}
+/* pencarian pasien yang pernah terdaftar: ketik nama atau RM */
+let LKP=null;
+const lkBtns=L=>L.map((c,i)=>`<button type="button" class="lkb" onclick="lkPick(${i})"><b>${esc(c.nama)}</b><small>RM ${esc(c.rm)}${c.lahir?' · lahir '+tglS(c.lahir):''}${c.jk?' · '+esc(c.jk):''}${c.tetap?' · jadwal tetap':''}</small></button>`).join('');
+/* isian diubah setelah terisi otomatis -> kosongkan isian otomatis agar tidak tertukar */
+function lkBatal(kind){if(!LKP)return;const c=LKP,same=kind==='n'?gv('g_nama').trim().toLowerCase()===c.nama.toLowerCase():rn(gv('g_rm'))===rn(c.rm);if(same)return;LKP=null;
+$(kind==='n'?'#g_rm':'#g_nama').value='';['g_jk','g_lahir'].forEach(i=>$('#'+i).value='');if(c.tetap)$('#g_status').value='';if(c.hbs||c.hiv||c.hcv)['g_hbs','g_hiv','g_hcv'].forEach(i=>$('#'+i).value='');
+OLD=null;const o=$('#x_old');o.style.display='none';o.innerHTML='';$('#lk_n').innerHTML=$('#lk_r').innerHTML='';pTog()}
+function lkQ(kind){clearTimeout(lkT);lkBatal(kind);const id=kind==='n'?'g_nama':'g_rm',q=gv(id).trim().replace(/\s+/g,' ');
+if(kind==='n'&&q.length<4||kind==='r'&&q.replace(/\D/g,'').length<5){$('#lk_'+kind).innerHTML='';return}
+lkT=setTimeout(async()=>{try{const r=await api('cari',{kind,q});if(!r.ok||gv(id).trim().replace(/\s+/g,' ')!==q)return;const L=r.data;
+if(!LKP)$('#lk_n').innerHTML=$('#lk_r').innerHTML='';
+if(!L.length&&!LKP){$('#lk_n').innerHTML='<small>Belum ada data pasien ini (pasien baru). Isi identitas secara manual.</small>';return}
+if(kind==='r'){if(L.length===1){LK=L;lkPick(0)}else if(L.length>1){LK=L;$('#lk_r').innerHTML='<div class="note">Ada beberapa data dengan No. RM ini. Pilih yang benar:</div>'+lkBtns(L)}return}
+const ex=L.filter(c=>String(c.nama).trim().toLowerCase()===q.toLowerCase());
+if(ex.length===1){LK=ex;lkPick(0);return}
+if(ex.length>1){LK=ex;$('#lk_r').innerHTML=`<div class="note">Ada ${ex.length} pasien bernama <b>${esc(q)}</b> dengan No. RM berbeda. Pilih yang sesuai:</div>`+lkBtns(ex);return}
+if(L.length){LK=L;$('#lk_n').innerHTML='<div class="note">Pasien serupa pernah terdaftar. Ketuk untuk mengisi otomatis:</div>'+lkBtns(L)}
+}catch(e){}},450)}
+function lkPick(i){const c=LK[i];LKP=c;$('#g_nama').value=c.nama;$('#g_rm').value=c.rm;if(c.lahir)$('#g_lahir').value=c.lahir;if(c.jk)$('#g_jk').value=c.jk;
+$('#lk_r').innerHTML='';$('#lk_n').innerHTML='<div class="note">✓ Identitas terisi otomatis dari data pasien yang pernah terdaftar.'+(c.lahir&&c.jk?' Periksa kembali.':' Lengkapi jenis kelamin / tanggal lahir yang masih kosong.')+'</div>';if(c.tetap)$('#g_status').value=ST_TETAP;
+OLD=null;const o=$('#x_old');o.style.display='none';o.innerHTML='';
+if(c.hbs||c.hiv||c.hcv){['hbs','hiv','hcv'].forEach(k=>{if(c[k])$('#g_'+k).value=c[k]});OLD={foto:c.nfoto||0};
+o.innerHTML=`Hasil skrining terakhir (${tglS(c.skrTgl)}) terisi otomatis. Periksa kembali.${c.nfoto?`<label><input type="checkbox" id="g_useold" checked onchange="pTog()">Pakai lampiran hasil sebelumnya (${c.nfoto} foto)</label>`:''}`;o.style.display=''}
+pTog()}
+function pKecil(f){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image;i.onload=()=>{try{const s=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.7))}catch(e){r(null)}};i.onerror=()=>{URL.revokeObjectURL(u);r(null)};i.src=u})}
+async function pFoto(el){const fs=[...el.files],room=4-FOTO.length;if(!fs.length)return;if(room<=0){toast('Maksimal 4 foto. Hapus salah satu dulu.');el.value='';return}
+const fc=$('#x_fcnt');if(fc)fc.textContent='Memproses foto…';let bad=0;
+for(const f of fs.slice(0,room)){const d=await pKecil(f);if(d)FOTO.push(d);else bad++}
+el.value='';pTog();if(bad)toast(bad+' foto tidak bisa dibaca. Coba ambil ulang atau pakai screenshot (JPG/PNG).');else if(fs.length>room)toast('Maksimal 4 foto, sisanya diabaikan')}
+async function pKirim(){const e=[],c=gv('g_waktu').startsWith('Segera'),baru=gv('g_status')===ST_BARU,pakaiLama=!!(OLD&&OLD.foto>0&&$('#g_useold')&&$('#g_useold').checked);
+const tetap=gv('g_status')===ST_TETAP;
+const wajib=[['g_waktu','Waktu HD'],['g_tgl','Tanggal HD'],['g_nama','Nama'],['g_rm','No. RM'],['g_jk','Jenis kelamin'],['g_lahir','Tanggal lahir'],['g_ruang','Ruangan'],['g_status','Status pasien']];
+if(!tetap)wajib.push(['g_dpjp','DPJP pengirim'],['g_dx','Diagnosa medis'],['g_thorax','Foto thorax ada/tidak'],['g_uf','UF'],['g_time','Time dialisis'],['g_qb','QB'],['g_hep','Heparin'],['g_trf','Transfusi darah'],['g_akses','Akses vaskular'],['g_aksesst','Status akses']);
+if(baru)wajib.push(['g_hbs','HBsAg'],['g_hiv','Anti HIV'],['g_hcv','Anti HCV']);
+wajib.forEach(([i,n])=>{if(!gv(i).trim())e.push(n)});
+if(c&&!gv('g_cito'))e.push('Indikasi Cito');if(c&&gv('g_cito').startsWith('Alasan')&&!gv('g_cito2').trim())e.push('Alasan Cito');
+if(!tetap&&gv('g_thorax')==='Ada'&&!gv('g_thx').trim())e.push('Hasil/kesan thorax');
+if(!tetap&&gv('g_trf')==='Ya'&&(!gv('g_trfn')||!gv('g_trfs')))e.push('Jumlah kantong dan stok darah');
+if(!tetap&&!$('#g_ic').checked)e.push('Centang informed consent');
+if(baru&&!FOTO.length&&!pakaiLama)e.push('Upload hasil lab skrining');
+if(e.length){$('#err').textContent='Mohon lengkapi: '+e.join(', ');$('#err').scrollIntoView({block:'center'});return}
+const lab={};if($('#g_lab').checked)Object.keys(REF).forEach(k=>{if(gv('l_'+k))lab[k]=gv('l_'+k)});
+const p={tgl:gv('g_tgl')||ymd(new Date()),waktu:gv('g_waktu'),cito:c?(gv('g_cito').startsWith('Alasan')?gv('g_cito2').trim():gv('g_cito')):'',nama:gv('g_nama').trim(),rm:gv('g_rm').trim(),jk:gv('g_jk'),lahir:gv('g_lahir'),ruang:gv('g_ruang').trim(),dpjp:gv('g_dpjp'),dx:gv('g_dx').trim(),ic:$('#g_ic').checked,status:gv('g_status'),thorax:gv('g_thorax'),thx:gv('g_thx').trim(),hbs:gv('g_hbs'),hiv:gv('g_hiv'),hcv:gv('g_hcv'),lab,uf:gv('g_uf'),time:gv('g_time'),qb:gv('g_qb'),hep:gv('g_hep'),trf:{ya:gv('g_trf')==='Ya',sel:gv('g_trf'),n:gv('g_trfn'),stok:gv('g_trfs')},akses:gv('g_akses'),aksesSt:gv('g_aksesst')};
+$('#kb').disabled=true;$('#kb').textContent='Mengirim…';
+try{const r=await api('pendSubmit',{...p,fotoData:FOTO,useOld:pakaiLama});if(!r.ok){$('#err').textContent=r.error||'Gagal mengirim';$('#kb').disabled=false;$('#kb').textContent='Kirim pendaftaran';return}
+try{const a=mineIds();a.push(r.id);localStorage.setItem('hd_mine',JSON.stringify(a.slice(-60)))}catch(x){}
+FOTO=[];OLD=null;waDialog(p)}catch(x){$('#err').textContent='Tidak dapat terhubung ke server. Periksa internet lalu coba lagi.';$('#kb').disabled=false;$('#kb').textContent='Kirim pendaftaran'}}
+const MSG_TUNGGU='Mohon tunggu dan pantau Rilis Jadwal HD di WAG Pendaftaran HD. Jam kirim pasien harus sesuai Jadwal Rilis. Jika ada keterlambatan atau batal, mohon konfirmasi segera. Terima kasih.';
+function waDialog(p){WAMSG=`*PENDAFTARAN HD RAWAT INAP*\n${p.cito?'🚨 *CITO HD* ('+p.cito+')':'📅 '+tgl(p.tgl)+' · '+p.waktu}\nNama: ${p.nama}\nRM: ${p.rm}\nRuangan: ${p.ruang}\nMohon cek di aplikasi Pendaftaran dan Penjadwalan Dialisis:\n${location.href.split('#')[0]}`;
+MINE=[Object.assign({},p,{id:'tmp',ts:Date.now(),st:'Menunggu',foto:[]})];RT='saya';renderRg();mineLoad();window.scrollTo(0,0);
+const d=$('#dlg');d.innerHTML=`<h3>Pendaftaran terkirim ✓</h3><small><b>${esc(p.nama)}</b> · RM ${esc(p.rm)} sudah tersimpan di menu <b>Pendaftaran Saya</b>.</small><div class="note" style="margin:10px 0">${MSG_TUNGGU}</div><button class="pri big" onclick="$('#dlg').close()">Mengerti</button><button class="big" style="margin-top:6px" onclick="waOpen(1)">📱 Beritahu petugas lewat WA (opsional)</button>`;d.showModal()}
+function waOpen(p){window.open('https://wa.me/'+(p&&WA_PETUGAS?WA_PETUGAS:'')+'?text='+encodeURIComponent(WAMSG),'_blank')}
+const mineIds=()=>{try{return JSON.parse(localStorage.getItem('hd_mine')||'[]')}catch(e){return[]}};
+async function mineLoad(){try{const r=await api('pendMine',{ids:mineIds()});if(r.ok){MINE=r.data;if(RT==='saya')renderRg()}}catch(e){}}
+const pSt=p=>p.st==='Dijadwalkan'&&p.jad?`<span class="b ok">Dijadwalkan ${tgl(p.jad.tgl)} · ${sj(p.jad)} Lt.${p.jad.lantai}</span>`:p.st==='Dibatalkan'?'<span class="b no">Jadwal dibatalkan · menunggu dijadwalkan ulang</span>':'<span class="b no">Menunggu petugas HD</span>';
+function pSaya(){const a=[...MINE].sort((x,y)=>y.ts-x.ts);return `<div class="note" style="margin:0 0 8px">${MSG_TUNGGU}</div><small style="margin-bottom:6px">Menampilkan pendaftaran yang dikirim dari perangkat ini.</small>`+(a.length?a.map(p=>`<div class="card"><b>${esc(p.nama)}</b> <small style="display:inline">· RM ${esc(p.rm)} · ${esc(p.ruang)}</small><div>${isC(p)?'<span class="b cito">CITO</span>':''}<span class="b">${esc(p.waktu)}</span>${pSt(p)}</div></div>`).join(''):'<div class="card mut">Belum ada pendaftaran.</div>')}
+
+/* -- Sisi petugas HD -- */
+/* status pendaftaran dihitung dari jadwal harian: ditarik / dibatalkan / pindah shift / dihapus */
+function pStat(p){let b=null;if(SL)for(const d in S.jadwal)for(const i of S.jadwal[d].items)if(i.pid===p.id){const c={tgl:d,shift:i.shift,lantai:i.lantai,jam:i.jam||'',batal:i.status==='Batal'};if(!b||(b.batal&&!c.batal)||(b.batal===c.batal&&d>b.tgl))b=c}
+if(!SL)return{st:p.st||'Menunggu',jad:p.jad};
+if(!b)return p.st==='Menunggu'?{st:'Menunggu'}:{st:'Menunggu',note:'Sudah dihapus dari jadwal'};
+return b.batal?{st:'Dibatalkan',jad:{tgl:b.tgl,shift:b.shift,lantai:b.lantai,jam:b.jam||''},note:'Dibatalkan di jadwal '+tglS(b.tgl)}:{st:'Dijadwalkan',jad:{tgl:b.tgl,shift:b.shift,lantai:b.lantai,jam:b.jam||''}}}
+async function pSync(){if(!SL||!TOK||!ME||ME.role!=='petugas')return;const ch=[];
+PEND.forEach(p=>{const d=pStat(p);if(d.st!==p.st||(d.st==='Dijadwalkan'&&JSON.stringify(d.jad)!==JSON.stringify(p.jad)))ch.push({id:p.id,st:d.st,jad:d.jad||null})});
+if(!ch.length)return;try{const r=await api('pendSync',{list:ch});if(r.ok)ch.forEach(x=>{const p=PEND.find(y=>y.id===x.id);if(p){p.st=x.st;p.jad=x.jad}})}catch(e){}}
+async function pendRefresh(force){if(!TOK||!ME||ME.role!=='petugas')return;if(!force&&Date.now()-pLast<10000)return;pLast=Date.now();
+try{const r=await api('pendList');if(!r.ok)return;PEND=r.data;const nw=PEND.filter(x=>x.st==='Menunggu'&&(!seen||!seen.has(x.id)));
+if(seen&&nw.length)toast(nw.some(isC)?'🚨 PENDAFTARAN CITO HD BARU':'🔔 Ada '+nw.length+' pendaftaran HD baru');
+seen=new Set(PEND.map(x=>x.id));pSync();const n=PEND.filter(x=>pStat(x).st!=='Dijadwalkan').length;$('#pb').textContent=n?'('+n+')':'';if(V==='pend')render()}catch(e){}}
+setInterval(()=>{if(!document.hidden)pendRefresh()},60000);
+const pTags=p=>`${isC(p)?`<span class="b cito">CITO · ${esc(p.cito)}</span>`:''}${p.hbs==='Reaktif'?'<span class="b hbs">HBsAg Reaktif</span>':''}${p.hcv==='Reaktif'?'<span class="b hcv">HCV Reaktif</span>':''}${p.hiv==='Reaktif'?'<span class="b hiv">HIV Reaktif</span>':''}${p.trf&&p.trf.ya?`<span class="b ${p.trf.stok==='Sudah tersedia'?'ok':'no'}">Transfusi ${esc(p.trf.n)} kantong · darah ${p.trf.stok==='Sudah tersedia'?'ada':'belum ada'}</span>`:''}${(p.foto||[]).length?`<span class="b ok">Lampiran lab ${p.foto.length}</span>`:isBaru(p)?'<span class="b no">Tanpa lampiran lab</span>':''}`;
+function vPend(){const rows=PEND.map(p=>({p,d:pStat(p)})),bel=rows.filter(x=>x.d.st!=='Dijadwalkan'),jd=rows.filter(x=>x.d.st==='Dijadwalkan');
+const list=(PF==='belum'?bel:PF==='jadwal'?jd:rows).sort((a,b)=>(a.d.st==='Dijadwalkan'?1:0)-(b.d.st==='Dijadwalkan'?1:0)||(isC(b.p)-isC(a.p))||(a.p.tgl||'').localeCompare(b.p.tgl||'')||a.p.ts-b.p.ts);
+const chip=(k,t,n)=>`<button class="${PF===k?'on':''}" onclick="PF='${k}';render()">${t} (${n})</button>`;
+return `<div class="bar np"><button onclick="pendRefresh(true)">⟳</button>${chip('belum','Belum terlayani',bel.length)}${chip('jadwal','Sudah terjadwal',jd.length)}${chip('semua','Semua',rows.length)}</div><small style="margin-bottom:6px">Status mengikuti Jadwal Harian: jika pasien dibatalkan atau dihapus dari jadwal, otomatis kembali ke Belum terlayani.</small>`+
+(list.map(({p,d})=>`<div class="card"><div class="top"><div><b>${esc(p.nama)}</b><small>RM ${esc(p.rm)} · ${pUsia(p.lahir)} · ${esc(p.jk||'')} · ${esc(p.ruang)}</small></div>${d.st==='Dijadwalkan'?`<span class="b ok">Terjadwal</span>`:d.st==='Dibatalkan'?'<span class="b no">Dibatalkan</span>':'<span class="b no">Belum terlayani</span>'}</div>
+<div style="margin:4px 0"><span class="b">${tgl(p.tgl)} · ${esc(p.waktu)}</span>${pTags(p)}</div>${d.note?`<small style="color:#c60">${esc(d.note)}</small>`:''}
+<small>${[p.dx,p.dpjp,'dikirim '+(p.byNama||'')].filter(Boolean).map(esc).join(' · ')}</small>
+<div class="r2" style="margin-top:8px"><button onclick="pDetail('${p.id}')">Lihat detail</button>${d.st==='Dijadwalkan'?`<button onclick="cur='${d.jad.tgl}';mon=cur.slice(0,7);go('harian')">${tglS(d.jad.tgl)} · ${sj(d.jad)} Lt.${d.jad.lantai} ›</button>`:`<button class="pri" onclick="pTarikForm('${p.id}')">${d.st==='Dibatalkan'?'Tarik lagi':'Tarik ke jadwal'}</button>`}</div></div>`).join('')||'<div class="card mut">Tidak ada data.</div>')}
+async function pDetail(id){const p=PEND.find(x=>x.id===id),r=(k,x)=>x||x===0?`<tr><td>${k}</td><td>${x}</td></tr>`:'';
+const lb=Object.keys(p.lab||{}).map(k=>r(REF[k].n,`<span class="${abn(k,p.lab[k],jkc(p.jk))?'ab':''}">${esc(p.lab[k])} ${REF[k].u}</span>`)).join('');
+$('#dlg').innerHTML=`<h3>${esc(p.nama)} · ${esc(p.rm)}</h3><table>${r('Waktu HD',tgl(p.tgl)+' · '+esc(p.waktu))}${r('Indikasi Cito',esc(p.cito))}${r('Jenis kelamin / usia',esc(p.jk)+' · '+pUsia(p.lahir))}${r('Asal','RANAP · '+esc(p.ruang))}${r('DPJP pengirim',esc(p.dpjp))}${r('Diagnosa',esc(p.dx))}${r('Informed consent',p.ic?'Ya':isBaru(p)?'Belum':'Tidak diisi (pasien jadwal tetap)')}${r('Status',esc(p.status))}${r('Foto thorax',esc(p.thorax)+(p.thx?' — '+esc(p.thx):''))}${r('HBsAg',rkS(p.hbs))}${r('Anti HIV',rkS(p.hiv))}${r('Anti HCV',rkS(p.hcv))}${lb}${r('UF / Time',p.uf||p.time?esc(p.uf||'-')+' L / '+esc(p.time||'-')+' jam':'')}${r('QB',p.qb?esc(p.qb)+' ml/mnt':'')}${r('Heparin',esc(p.hep))}${r('Transfusi',p.trf&&p.trf.ya?esc(p.trf.n)+' kantong · '+esc(p.trf.stok):(p.trf&&p.trf.sel==='')?'':'Tidak')}${r('Akses vaskular',p.akses||p.aksesSt?[p.akses,p.aksesSt].filter(Boolean).map(esc).join(' · ')+(p.akses==='Femoral'?' (femoral tidak disarankan)':''):'')}</table><div id="pf" class="th"></div><button class="big" onclick="$('#dlg').close()">Tutup</button>`;$('#dlg').showModal();
+for(const f of p.foto||[]){try{const x=await api('foto',{id:f});const el=$('#pf');if(!el)break;if(x.ok)el.insertAdjacentHTML('beforeend',`<img src="${x.data}">`)}catch(e){}}}
+function pTarikForm(id){const p=PEND.find(x=>x.id===id),sh=p.waktu.startsWith('Pagi')?'Pagi':p.waktu.startsWith('Siang')?'Siang':(p.cito||/cito|segera/i.test(p.waktu))?'CITO':'';
+$('#dlg').innerHTML=`<h3>Tarik ke jadwal harian</h3><b>${esc(p.nama)}</b><small>RM ${esc(p.rm)} · RANAP · ${esc(p.waktu)}</small>
+<label>Tanggal<input id="t_tgl" type="date" value="${p.tgl}" onchange="pCek('${id}')"></label>
+<div class="r2"><label>Shift<select id="t_sh" onchange="pCek('${id}')"><option value="">Pilih…</option><option ${sh==='Pagi'?'selected':''}>Pagi</option><option ${sh==='Siang'?'selected':''}>Siang</option><option value="CITO" ${sh==='CITO'?'selected':''}>CITO · atur jam sendiri</option></select></label><label>Lantai<select id="t_lt" onchange="pCek('${id}')"><option>1</option><option>2</option></select></label></div>
+<label id="t_jamw" style="display:none">Jam layanan CITO<input id="t_jam" type="time" value="${new Date().toTimeString().slice(0,5)}"></label>
+<div id="t_w" class="note" style="display:none"></div>
+<small style="margin-top:8px">Kolom Keterangan di jadwal:</small><div><span class="b ${p.hbs==='Reaktif'?'hbs':p.hcv==='Reaktif'?'hcv':''}">${esc(ketOf(p))}</span></div><small>Status HIV tidak dimasukkan ke jadwal.</small>
+<div class="r2" style="margin-top:10px"><button onclick="$('#dlg').close()">Batal</button><button class="pri" onclick="pTarik('${id}')">Tarik</button></div>`;$('#dlg').showModal();pCek(id)}
+function pCek(id){const p=PEND.find(x=>x.id===id),l=+gv('t_lt'),sh=gv('t_sh'),tg=gv('t_tgl');let m='';const jw=$('#t_jamw');if(jw)jw.style.display=sh==='CITO'?'':'none';
+if(p.hbs==='Reaktif')m+=l===2?'HBsAg reaktif: Lantai 2 tidak punya ruang isolasi HBsAg, pilih Lantai 1. ':'HBsAg reaktif: gunakan slot isolasi HBsAg Lantai 1. ';
+if(sh&&tg){const o=cur;cur=tg;const n=jml(sh,l),mx=lim(sh,l);cur=o;m+=sh==='CITO'?'CITO Lantai '+l+': sudah '+n+' pasien CITO di tanggal itu. Jam bebas, tanpa batas shift pagi/siang.':'Lantai '+l+' shift '+sh+': terisi '+n+'/'+mx+(n>=mx?' · PENUH':'.')}
+const w=$('#t_w');w.style.display=m?'':'none';w.textContent=m}
+async function pTarik(id){const p=PEND.find(x=>x.id===id),tg=gv('t_tgl'),sh=gv('t_sh'),lt=+gv('t_lt'),jam=sh==='CITO'?gv('t_jam'):'';if(!tg||!sh){toast('Pilih tanggal dan shift');return}
+if(sh==='CITO'&&!jam){toast('Isi jam layanan CITO');return}
+const o=cur;cur=tg;mon=cur.slice(0,7);const day=J(cur),ex=day.items.find(i=>i.pid===id),back=()=>{cur=o;mon=cur.slice(0,7)};
+if(ex&&ex.status!=='Batal'){back();toast('Pasien ini sudah ada di jadwal tanggal itu');return}
+if(penuh(sh,lt,ex&&ex.id)){back();toast(msgPenuh(sh,lt));return}
+if(ex){ex.status='Aktif';ex.shift=sh;ex.lantai=lt;ex.jam=jam;ex.ket=ketOf(p)}else day.items.push({id:uid(),pid:id,nama:p.nama,rm:p.rm,asal:'Ranap',shift:sh,lantai:lt,jam:jam,ket:ketOf(p),jenis:'Tambahan',status:'Aktif'});
+day.rilis=null;save();$('#dlg').close();V='harian';render();toast('Ditarik ke jadwal '+tgl(tg)+' · '+(sh==='CITO'?'CITO jam '+fj(jam):sh)+' Lt.'+lt)}
+
+/* ---- MODE DEMO: server tiruan di browser (data contoh, tidak dikirim ke mana pun) ---- */
+const DEMO_PIN='1234';
+function demoSeed(){const t=ymd(new Date()),A=['Rajal','Ranap','IGD'],K=['','','HBsAg','','HCV','','ISO TB','','','','',''];
+const N=['Ahmad Fauzi','Siti Rohmah','Dedi Kurniawan','Rina Marlina','Asep Saepudin','Euis Komariah','Yayat Supriatna','Neneng Hasanah','Ujang Sudrajat','Imas Masitoh','Cecep Gunawan','Entin Suryani','Iwan Setiawan','Ratna Dewi'];
+const master=N.map((nama,i)=>({id:uid(),nama,rm:String(100201+i*37),asal:A[i%4==3?2:i%5==4?1:0],hari:i%2?[2,4,6]:[1,3,5],shift:i%4<2?'Pagi':'Siang',lantai:i%3==0?2:1,ket:K[i%12],aktif:true}));
+const P=(o)=>Object.assign({id:uid(),ts:Date.now()-Math.random()*36e5,by:'R:Melati 2',byNama:'Melati 2',st:'Menunggu',foto:[],tgl:t,ic:true,thorax:'Tidak ada',thx:'',hiv:'Non Reaktif',lab:{},uf:'2',time:'4',qb:'200',hep:'Standar',trf:{ya:false,n:'',stok:''},akses:'CDL',aksesSt:'Sudah terpasang',jk:'Laki-laki',lahir:'1968-05-12',dpjp:DPJPS[0]},o);
+const pend=[P({nama:'Hendra Gunadi',rm:'204518',waktu:'Pagi (06.00)',cito:'',ruang:'Melati 2',dx:'CKD stage 5 on HD, overload cairan',status:ST_TETAP,hbs:'Non Reaktif',hcv:'Non Reaktif'}),
+P({nama:'Nining Rahayu',rm:'205992',jk:'Perempuan',lahir:'1975-11-03',waktu:'Segera / Cito HD',cito:'Hiperkalemia',ruang:'IGD Observasi',byNama:'IGD Observasi',by:'R:IGD Observasi',dx:'Hiperkalemia berat K 7,1',status:ST_BARU,hbs:'Non Reaktif',hcv:'Non Reaktif',lab:{k:'7.1',ur:'180',kr:'9.8'},akses:'Femoral',aksesSt:'Belum terpasang'}),
+P({nama:'Taufik Hidayat',rm:'206331',waktu:'Siang (12.15)',ruang:'Mawar 1',byNama:'Mawar 1',by:'R:Mawar 1',dx:'CKD on HD + pneumonia',status:ST_TETAP,hbs:'Reaktif',hcv:'Non Reaktif',trf:{ya:true,n:'2',stok:'Sudah tersedia'}})];
+return{data:{_rev:0,master,jadwal:{},seeded:false},pend,foto:{}}}
+let _mem=null;
+function demoDB(){if(_mem)return _mem;try{const r=localStorage.getItem('srv');if(r){_mem=JSON.parse(r);return _mem}}catch(e){}_mem=demoSeed();demoPut(_mem);return _mem}
+function demoPut(d){_mem=d;try{localStorage.setItem('srv',JSON.stringify(d))}catch(e){}}
+function demoApi(act,p){return new Promise(res=>setTimeout(()=>res(demoRun(act,p)),180))}
+function demoRun(act,p){p=p||{};
+if(act==='login'){if(p.mode==='petugas'){if(String(p.pin)!==DEMO_PIN)return{ok:false,error:'PIN salah (PIN demo: '+DEMO_PIN+')'};return{ok:true,token:'demo|P',user:{u:'P',role:'petugas',nama:'Petugas HD'}}}
+const r=String(p.ruang||'').replace(/[|]/g,'').trim().slice(0,40);if(!r)return{ok:false,error:'Isi nama ruangan'};return{ok:true,token:'demo|R:'+r,user:{u:'R:'+r,role:'ruangan',nama:r}}}
+if(!TOK)return{ok:false,auth:true,error:'Sesi berakhir, silakan masuk lagi'};
+const me=TOK==='demo|P'?{u:'P',role:'petugas',nama:'Petugas HD'}:{u:TOK.slice(5),role:'ruangan',nama:TOK.slice(7)},pt=me.role==='petugas',db=demoDB(),no={ok:false,error:'Akses ditolak'};
+const nr=x=>String(x||'').replace(/\D/g,'').replace(/^0+/,'');
+switch(act){
+case 'load':return pt?{ok:true,data:db.data}:no;
+case 'save':{if(!pt)return no;const inc=typeof p==='string'?JSON.parse(p):p;if((inc._rev||0)!==(db.data._rev||0))return{ok:false,conflict:true};inc._rev=(db.data._rev||0)+1;db.data=inc;demoPut(db);return{ok:true,rev:inc._rev}}
+case 'pendList':return pt?{ok:true,data:db.pend}:no;
+case 'pendSync':{if(!pt)return no;(p.list||[]).forEach(x=>{const r=db.pend.find(y=>y.id===x.id);if(r){r.st=x.st;r.jad=x.jad||null}});demoPut(db);return{ok:true}}
+case 'pendMine':{const ids=(p.ids||[]).map(String);return{ok:true,data:db.pend.filter(r=>ids.indexOf(r.id)>=0&&(pt||r.by===me.u))}}
+case 'foto':return pt&&db.foto[p.id]?{ok:true,data:db.foto[p.id]}:{ok:false,error:'Foto tidak ditemukan'};
+case 'pendSubmit':{if(!p.nama||!p.rm||!p.waktu)return{ok:false,error:'Data pendaftaran belum lengkap'};
+const id=uid(),rec=Object.assign({},p,{id,ts:Date.now(),by:me.u,byNama:me.nama,st:'Menunggu',foto:[]});delete rec.fotoData;delete rec.useOld;
+if(p.useOld){for(let i=db.pend.length-1;i>=0;i--)if(nr(db.pend[i].rm)===nr(p.rm)&&(db.pend[i].foto||[]).length){rec.foto=db.pend[i].foto.slice();break}}
+(p.fotoData||[]).slice(0,4).forEach((d,i)=>{const f='f'+id+i;db.foto[f]=d;rec.foto.push(f)});db.pend.push(rec);
+try{_ls.s.call(localStorage,'demo_srv',JSON.stringify(db))}catch(e){rec.foto.forEach(f=>delete db.foto[f]);rec.foto=[];demoPut(db)}return{ok:true,id}}
+case 'cari':{const M={},put=(n,rm,x)=>{const k=nr(rm);if(!k)return;M[k]=Object.assign(M[k]||{nama:n,rm},x)};
+Object.keys(db.data.jadwal||{}).forEach(t=>((db.data.jadwal[t]||{}).items||[]).forEach(i=>put(i.nama,i.rm,{})));(db.data.master||[]).forEach(m=>put(m.nama,m.rm,{tetap:true}));
+[...db.pend].sort((a,b)=>a.ts-b.ts).forEach(r=>{const x={nama:r.nama,rm:r.rm};if(r.lahir)x.lahir=r.lahir;if(r.jk)x.jk=r.jk;if(r.hbs||r.hiv||r.hcv){x.hbs=r.hbs;x.hiv=r.hiv;x.hcv=r.hcv;x.skrTgl=ymd(new Date(r.ts))}if((r.foto||[]).length)x.nfoto=r.foto.length;put(r.nama,r.rm,x)});
+let o=Object.keys(M).map(k=>M[k]);const q=String(p.q||'').trim();
+if(p.kind==='r'){const k=nr(q);o=k.length>=5?o.filter(c=>nr(c.rm)===k):[]}else{const t=q.toLowerCase();o=t.length>=4?o.filter(c=>String(c.nama).toLowerCase().indexOf(t)>=0):[]}
+return{ok:true,data:o.slice(0,6)}}}
+return{ok:false,error:'Aksi tidak dikenal'}}
+function demoReset(){if(!confirm('Reset semua data demo (jadwal, pendaftaran, daftar ruangan) ke kondisi awal?'))return;Object.keys(localStorage).filter(k=>k.indexOf('demo_')===0).forEach(k=>_ls.r.call(localStorage,k));location.reload()}
+if(DEMO){document.body.insertAdjacentHTML('beforeend','<div id="demoBar">MODE DEMO · data contoh<button onclick="demoReset()">Reset</button></div>');
+$('#lp1').insertAdjacentHTML('beforeend','<small>PIN demo: <b>'+DEMO_PIN+'</b></small>')}
+
+boot();
+</script></body></html>
