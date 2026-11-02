@@ -67,7 +67,6 @@ dialog table td:first-child,#rg table td:first-child{color:var(--mut);width:42%}
 .cbl{display:block;margin:12px 0 0;font-size:12px;color:var(--mut)}.cb{position:relative}#land .cb input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px 44px 11px 11px}
 .cbt{position:absolute;right:3px;bottom:3px;height:38px;width:40px;border:0!important;background:transparent!important;font-size:17px;color:var(--mut);cursor:pointer;border-radius:8px}.cbt:hover{background:rgba(30,140,95,.12)!important}
 .cbd{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.18);max-height:250px;overflow:auto;margin-top:3px}.cbd div{padding:10px 12px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--bd)}.cbd div:last-child{border-bottom:0}.cbd div:hover{background:rgba(30,140,95,.14)}
-#demoBar{position:fixed;left:8px;bottom:8px;z-index:60;background:#f59e0b;color:#1b2430;font-size:11px;font-weight:700;padding:4px 6px 4px 10px;border-radius:14px;display:flex;gap:6px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.25)}#demoBar button{padding:2px 8px;font-size:11px;border-radius:10px;background:#fff;color:#1b2430;border-color:#fff}
 #stkw,.rstk{position:sticky;top:0;z-index:20;background:var(--bg);padding-bottom:2px;border-bottom:1px solid var(--bd)}
 #stkw nav,.rstk nav{margin:6px 0}#vbar:empty{display:none}#vbar>*{margin-top:4px;margin-bottom:4px}#vbar .stk{position:static;padding:0}
 .mg2{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}.mg2.side{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}@media(max-width:480px){.mg2.side{grid-template-columns:minmax(0,1fr)}}
@@ -81,9 +80,6 @@ dialog table td:first-child,#rg table td:first-child{color:var(--mut);width:42%}
 <nav><button data-v="dash" onclick="go('dash')">Dasbor</button><button data-v="harian" onclick="go('harian')">Jadwal Harian</button><button data-v="pend" onclick="go('pend')">Pendaftaran <b id="pb"></b></button><button data-v="rilis" onclick="go('rilis')">Rilis per Shift</button><button data-v="master" onclick="go('master')">Pasien Tetap</button><button data-v="riwayat" onclick="go('riwayat')">Riwayat</button></nav><div id="vbar"></div></div>
 <div id="main"></div><div class="cr">Inovasi by: Epi Abdul Wahid</div><div id="rg" style="display:none"></div><dialog id="dlg"></dialog><div id="toast"></div>
 <script>
-const DEMO=false;/* true = mode review/demo (tanpa server). Ganti false untuk memakai server Apps Script asli. */
-const _ls={g:Storage.prototype.getItem,s:Storage.prototype.setItem,r:Storage.prototype.removeItem};
-if(DEMO){Storage.prototype.getItem=function(k){return _ls.g.call(this,'demo_'+k)};Storage.prototype.setItem=function(k,v){return _ls.s.call(this,'demo_'+k,v)};Storage.prototype.removeItem=function(k){return _ls.r.call(this,'demo_'+k)}}
 const $=s=>document.querySelector(s),KEY='hd_sched_v1';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9),pad=n=>String(n).padStart(2,'0');
@@ -101,7 +97,7 @@ const WA_GRUP='';/* tautan undangan WAG Pendaftaran HD, contoh https://chat.what
 let TOK='',ME=null,conflict=false,tm=null,saving=false,dirty=false,SL=false,LM=2;
 try{TOK=localStorage.getItem('hd_tok')||'';ME=JSON.parse(localStorage.getItem('hd_me')||'null')}catch(e){}
 function stat(t,c){const e=$('#sync');if(e){e.textContent=t;e.style.color=c||''}}
-function api(act,payload){if(DEMO)return demoApi(act,payload);return new Promise((ok,no)=>{
+function api(act,payload){return new Promise((ok,no)=>{
 if(!/^https:/.test(GAS_URL))return no(new Error('URL Apps Script belum diisi'));
 fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act,token:TOK,payload})}).then(r=>r.json()).then(r=>{if(r&&r.auth&&act!=='login')logout(r.error);ok(r)},no)})}
 const lerr=t=>{$('#l_err').textContent=t||''};
@@ -401,9 +397,63 @@ const hd=ex.length>1?`<small style="color:#b45309">Ada ${ex.length} pasien denga
 box.innerHTML=hd+FS.map((e,x)=>{const dn=e.last?Math.round((pd(today)-pd(e.last))/864e5):null;return `<button type="button" class="sg" onclick="fPick(${x})">${esc(e.nama)} · ${esc(e.rm)}<small>${e.last?'HD terakhir '+tg2(e.last)+' ('+(dn===0?'hari ini':dn+' hari lalu')+')':'belum ada riwayat HD'}</small></button>`}).join('');fHint()}
 function fPick(i){const e=FS[i];if(!e)return;$('#f_nama').value=e.nama;$('#f_rm').value=e.rm;FAn=FAr=false;$('#f_sug').innerHTML='';fHint()}
 
+/* ---- Tempel teks -> isi otomatis form pasien non-reguler ---- */
+function parseTempel(t){
+t=String(t||'').replace(/\u00a0/g,' ').trim();const R={nama:'',rm:'',lantai:0,shift:'',asal:'',ket:'',jam:''};if(!t)return R;let rest=t;
+const cut=m=>{if(m)rest=rest.replace(m[0],' ')};
+let m=t.match(/\bnama(?:\s*pasien)?\s*[:=]\s*([^\n|;,]+)/i);if(m){R.nama=m[1].trim();cut(m)}
+m=rest.match(/\b(?:no\.?\s*)?rm\s*[:=]?\s*(\d[\d.\-]{2,})/i)||rest.match(/(?:^|[^\d])(\d[\d.\-]{3,}\d)(?!\d)/);if(m){R.rm=m[1].replace(/[.\-]+$/,'');cut(m)}
+m=rest.match(/\b(?:lantai|lt|lnt)\.?\s*[:=]?\s*([12])\b/i);if(m){R.lantai=+m[1];cut(m)}
+m=rest.match(/\b(pagi|siang|sore|cito)\b/i);if(m){const v=m[1].toLowerCase();R.shift=v==='pagi'?'Pagi':v==='cito'?'CITO':'Siang';cut(m)}
+m=rest.match(/\b(igd|ugd)\b/i);if(m){R.asal='IGD';cut(m)}else{m=rest.match(/\b(ranap|rawat\s*inap)\b/i);if(m){R.asal='Ranap';cut(m)}else{m=rest.match(/\b(rajal|rawat\s*jalan|poli)\b/i);if(m){R.asal='Rajal';cut(m)}}}
+m=rest.match(/\bket(?:erangan)?\s*[:=]\s*([^\n|;]+)/i);
+if(m){R.ket=normKet(m[1].trim());cut(m)}
+else{m=rest.match(/\b(hcv|hbs\s*ag|hbs|hep(?:atitis)?\s*b|hep|iso(?:lasi)?\s*tb|iso|tb|non\s*reguler)\b/i);if(m){R.ket=normKet(m[1].replace(/\s+/g,' '));cut(m)}}
+if(R.shift==='CITO'){m=rest.match(/\b(\d{1,2})[.:](\d{2})\b/);if(m){R.jam=('0'+m[1]).slice(-2)+':'+m[2];cut(m)}}
+if(!R.lantai){m=rest.match(/(?:^|\s)([12])(?=\s|$)/);if(m){R.lantai=+m[1];cut(m)}}
+if(!R.lantai){const ps=rest.split(/[\t|;\n,]+/);for(const p of ps){if(/^\s*[12]\s*$/.test(p)){R.lantai=+p.trim();rest=rest.replace(p,' ');break}}}
+if(!R.nama){rest=rest.replace(/\b(nama(?:\s*pasien)?|no\.?\s*rm|rm|shift|lantai|lt|ket(?:erangan)?|asal|pasien)\b\s*[:=]?/gi,' ');
+R.nama=rest.replace(/[|;,\/\t\n]+/g,' ').replace(/^[\s\-–:=.]+|[\s\-–:=.]+$/g,'').replace(/\s{2,}/g,' ').trim()}
+return R}
+function parseBanyak(t){t=String(t||'').replace(/\r/g,'').trim();if(!t)return[];
+const lb=[...t.matchAll(/\bnama(?:\s*pasien)?\s*[:=]/gi)];let ch;
+if(lb.length>=2)ch=lb.map((x,k)=>t.slice(x.index,k+1<lb.length?lb[k+1].index:undefined));
+else if(lb.length===1)ch=[t];else ch=t.split('\n').filter(x=>x.trim());
+return ch.map(parseTempel).filter(r=>r.nama||r.rm)}
+let FB=[];
+const fLeng=r=>!!(r.nama&&r.lantai&&r.shift);
+function fTempel(){const el=$('#f_tmp');if(!el)return;const o=$('#f_tmpinfo');
+if(!el.value.trim()){o.innerHTML='';FB=[];return}
+const L=parseBanyak(el.value);if(!L.length){o.innerHTML='';FB=[];return}
+if(L.length>1){FB=L;const day=J(cur);
+const rows=L.map((r,x)=>{const dup=r.rm&&(day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm))||L.slice(0,x).some(q=>fLeng(q)&&q.rm&&rn(q.rm)===rn(r.rm)));const miss=[!r.nama&&'Nama',!r.lantai&&'Lantai',!r.shift&&'Shift'].filter(Boolean);
+const t=esc(r.nama||'(tanpa nama)')+' · '+esc(r.rm||'tanpa RM')+' · '+(r.lantai?'Lt '+r.lantai:'Lt ?')+' · '+(r.shift||'Shift ?')+(r.ket?' · '+esc(r.ket):'');
+return `<div style="padding:3px 0;border-bottom:1px solid #0001"><small style="color:${miss.length||dup?'#b45309':'#15803d'}">${miss.length?'⚠':dup?'⚠':'✓'} ${x+1}. ${t}${miss.length?' — belum terbaca: '+miss.join(', ')+' (dilewati)':''}${dup?' — RM sudah ada di jadwal/daftar ini (dilewati)':''}</small></div>`}).join('');
+const n=L.filter(r=>fLeng(r)).length;
+o.innerHTML=`<small><b>${L.length} pasien terbaca</b> — periksa dulu:</small>${rows}<button class="pri" style="width:100%;margin-top:6px" onclick="fSimpanBanyak()">Simpan semua yang lengkap</button><small>Asal diisi sesuai pilihan "Asal" di bawah bila tidak disebut. Yang dilewati bisa ditambah satu per satu.</small>`;return}
+FB=[];const R=L[0];
+const set=(id,v)=>{if(v!==''&&v!==0&&v!=null){$('#f_'+id).value=v;return true}return false};
+const ok=[],miss=[];
+(set('nama',R.nama)?ok:miss).push('Nama');(set('rm',R.rm)?ok:miss).push('No. RM');
+(set('lantai',R.lantai)?ok:miss).push('Lantai');(set('shift',R.shift)?ok:miss).push('Shift');
+if(R.asal)set('asal',R.asal);if(R.ket){$('#f_ket').value=R.ket}
+fJam();if(R.jam&&$('#f_jam'))$('#f_jam').value=R.jam;
+FAn=FAr=false;const box=$('#f_sug');if(box)box.innerHTML='';fHint();
+o.innerHTML=`<small style="color:#15803d">Terisi: ${ok.join(', ')}${R.asal?', Asal '+R.asal:''}${R.ket?', Ket '+esc(R.ket):''}</small>`+(miss.length?`<br><small style="color:#b45309">Belum terbaca: ${miss.join(', ')} — isi/pilih manual di bawah.</small>`:'')+`<br><small>Periksa lagi sebelum Simpan.</small>`}
+function fSimpanBanyak(){const day=J(cur),asal0=$('#f_asal')?$('#f_asal').value:'Rajal',add=[],skip=[];
+FB.forEach(r=>{const nm=r.nama||'(tanpa nama)';
+if(!fLeng(r)){skip.push(nm+' — data belum lengkap');return}
+if(r.rm&&day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm))){skip.push(nm+' — sudah ada di jadwal hari ini');return}
+if(penuh(r.shift,r.lantai)){skip.push(nm+' — '+msgPenuh(r.shift,r.lantai));return}
+day.items.push({id:uid(),nama:r.nama,rm:r.rm,asal:r.asal||asal0,shift:r.shift,lantai:r.lantai,ket:r.ket||'Non Reguler',jam:r.shift==='CITO'?(r.jam||''):'',jenis:'Tambahan',status:'Aktif'});add.push(r.nama)});
+if(add.length){day.rilis=null;save();render()}
+FB=[];
+if(!skip.length){$('#dlg').close();toast(add.length+' pasien ditambahkan');return}
+$('#dlg').innerHTML=`<h3>${add.length} pasien ditambahkan</h3>${skip.length?`<small style="color:#b45309"><b>${skip.length} tidak masuk:</b></small>`+skip.map(s=>`<small style="display:block;color:#b45309">• ${esc(s)}</small>`).join(''):''}<div class="r2" style="margin-top:10px"><button class="pri" onclick="$('#dlg').close()">Tutup</button></div>`}
 /* ---- Form ---- */
 function openForm(mode,o){FM={mode,id:o.id};FAn=FAr=false;const m=mode==='m';
 $('#dlg').innerHTML=`<h3>${m?'Pasien tetap':(o.id?'Ubah jadwal pasien':'Tambah pasien (non-reguler)')}</h3>
+${m||o.id?'':`<label>📋 Tempel teks <small>(Nama, No RM, lantai 1/2, ket HBsAg/HCV, shift pagi/siang — urutan bebas; banyak pasien = satu baris per pasien)</small><textarea id="f_tmp" rows="3" placeholder="contoh: Nama Pasien 000000 1 HBsAg Siang" onpaste="setTimeout(fTempel,0)" oninput="fTempel()" style="width:100%;box-sizing:border-box"></textarea></label><div id="f_tmpinfo"></div>`}
 <label>Nama<input id="f_nama" value="${esc(o.nama)}" ${m?'':'oninput="fCari(\'nama\')" autocomplete="off"'}></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" ${m?'':'oninput="fCari(\'rm\');fHint()" autocomplete="off"'}></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}
 <div class="r2"><label>Asal<select id="f_asal">${sel(['Rajal','Ranap','IGD'],o.asal)}</select></label><label>${m?'Shift utama':'Shift'}<select id="f_shift"${m?' onchange="fSh0()"':' onchange="fJam()"'}>${sel(m?['Pagi','Siang']:['Pagi','Siang','CITO'],o.shift)}</select></label></div>
 <div class="r2"><label>Lantai<select id="f_lantai">${sel([1,2],o.lantai)}</select></label><label>Ket<input id="f_ket" list="kets" value="${esc(o.ket)}"></label></div>
@@ -659,57 +709,6 @@ if(penuh(sh,lt,ex&&ex.id)){back();toast(msgPenuh(sh,lt));return}
 if(ex){ex.status='Aktif';ex.shift=sh;ex.lantai=lt;ex.jam=jam;ex.ket=ketOf(p)}else day.items.push({id:uid(),pid:id,nama:p.nama,rm:p.rm,asal:'Ranap',shift:sh,lantai:lt,jam:jam,ket:ketOf(p),jenis:'Tambahan',status:'Aktif'});
 day.rilis=null;save();$('#dlg').close();V='harian';render();toast('Ditarik ke jadwal '+tgl(tg)+' · '+(sh==='CITO'?'CITO jam '+fj(jam):sh)+' Lt.'+lt)}
 
-/* ---- MODE DEMO: server tiruan di browser (data contoh, tidak dikirim ke mana pun) ---- */
-const DEMO_PIN='1234';
-function demoSeed(){const t=ymd(new Date()),A=['Rajal','Ranap','IGD'],K=['','','HBsAg','','HCV','','ISO TB','','','','',''];
-const N=['Ahmad Fauzi','Siti Rohmah','Dedi Kurniawan','Rina Marlina','Asep Saepudin','Euis Komariah','Yayat Supriatna','Neneng Hasanah','Ujang Sudrajat','Imas Masitoh','Cecep Gunawan','Entin Suryani','Iwan Setiawan','Ratna Dewi'];
-const master=N.map((nama,i)=>({id:uid(),nama,rm:String(100201+i*37),asal:A[i%4==3?2:i%5==4?1:0],hari:i%2?[2,4,6]:[1,3,5],shift:i%4<2?'Pagi':'Siang',lantai:i%3==0?2:1,ket:K[i%12],aktif:true}));
-const P=(o)=>Object.assign({id:uid(),ts:Date.now()-Math.random()*36e5,by:'R:Melati 2',byNama:'Melati 2',st:'Menunggu',foto:[],tgl:t,ic:true,thorax:'Tidak ada',thx:'',hiv:'Non Reaktif',lab:{},uf:'2',time:'4',qb:'200',hep:'Standar',trf:{ya:false,n:'',stok:''},akses:'CDL',aksesSt:'Sudah terpasang',jk:'Laki-laki',lahir:'1968-05-12',dpjp:DPJPS[0]},o);
-const dA=n=>ymd(new Date(Date.now()-n*864e5));
-const pend=[P({nama:'Hendra Gunadi',rm:'204518',waktu:'Pagi (06.00)',cito:'',ruang:'Melati 2',dx:'CKD stage 5 on HD, overload cairan',status:ST_TETAP,hbs:'Non Reaktif',hcv:'Non Reaktif',skrTgl:dA(21),foto:['fseed1'],thorax:'Ada',thx:'Edema paru',thxTgl:dA(3),lab:{hb:'8.9',ur:'142',kr:'11.2',k:'5.4'},labTgl:dA(2),uf:'2.5',time:'4',qb:'220',hep:'Minimal'}),
-P({nama:'Nining Rahayu',rm:'205992',jk:'Perempuan',lahir:'1975-11-03',waktu:'Segera / Cito HD',cito:'Hiperkalemia',ruang:'IGD Observasi',byNama:'IGD Observasi',by:'R:IGD Observasi',dx:'Hiperkalemia berat K 7,1',status:ST_BARU,hbs:'Non Reaktif',hcv:'Non Reaktif',skrTgl:dA(130),foto:['fseed1'],lab:{k:'7.1',ur:'180',kr:'9.8'},akses:'Femoral',aksesSt:'Belum terpasang'}),
-P({ts:Date.now()-9*864e5,nama:'Taufik Hidayat',rm:'206331',waktu:'Siang (12.15)',ruang:'Mawar 1',byNama:'Mawar 1',by:'R:Mawar 1',dx:'CKD on HD + pneumonia',status:ST_TETAP,hbs:'Reaktif',hcv:'Non Reaktif',skrTgl:dA(45),foto:['fseed1'],thorax:'Ada',thx:'Kardiomegali, efusi minimal',thxTgl:dA(10),trf:{ya:true,sel:'Ya',n:'2',stok:'Sudah tersedia'}})];
-return{data:{_rev:0,master,jadwal:{},seeded:false},pend,foto:{fseed1:'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="300" height="200" fill="#f3f6f4" stroke="#9bb"/><text x="150" y="95" font-size="16" text-anchor="middle" fill="#345">Contoh hasil lab skrining</text><text x="150" y="120" font-size="12" text-anchor="middle" fill="#567">(foto contoh mode demo)</text></svg>')}}}
-let _mem=null;
-function demoDB(){if(_mem)return _mem;try{const r=localStorage.getItem('srv');if(r){_mem=JSON.parse(r);return _mem}}catch(e){}_mem=demoSeed();demoPut(_mem);return _mem}
-function demoPut(d){_mem=d;try{localStorage.setItem('srv',JSON.stringify(d))}catch(e){}}
-function demoApi(act,p){return new Promise(res=>setTimeout(()=>res(demoRun(act,p)),180))}
-function demoRun(act,p){p=p||{};
-if(act==='login'){if(p.mode==='petugas'){if(String(p.pin)!==DEMO_PIN)return{ok:false,error:'PIN salah (PIN demo: '+DEMO_PIN+')'};return{ok:true,token:'demo|P',user:{u:'P',role:'petugas',nama:'Petugas HD'}}}
-const r=String(p.ruang||'').replace(/[|]/g,'').trim().slice(0,40);if(!r)return{ok:false,error:'Isi nama ruangan'};return{ok:true,token:'demo|R:'+r,user:{u:'R:'+r,role:'ruangan',nama:r}}}
-if(!TOK)return{ok:false,auth:true,error:'Sesi berakhir, silakan masuk lagi'};
-const me=TOK==='demo|P'?{u:'P',role:'petugas',nama:'Petugas HD'}:{u:TOK.slice(5),role:'ruangan',nama:TOK.slice(7)},pt=me.role==='petugas',db=demoDB(),no={ok:false,error:'Akses ditolak'};
-const nr=x=>String(x||'').replace(/\D/g,'').replace(/^0+/,'');
-{const cut=Date.now()-7*864e5;let ch=false;db.pend.forEach(r=>{if((r.foto||[]).length&&r.ts<cut){r.foto.forEach(f=>delete db.foto[f]);r.foto=[];r.fotoHapus=true;ch=true}});if(ch)demoPut(db)}
-switch(act){
-case 'load':return pt?{ok:true,data:db.data}:no;
-case 'save':{if(!pt)return no;const inc=typeof p==='string'?JSON.parse(p):p;if((inc._rev||0)!==(db.data._rev||0))return{ok:false,conflict:true};inc._rev=(db.data._rev||0)+1;db.data=inc;demoPut(db);return{ok:true,rev:inc._rev}}
-case 'pendList':return pt?{ok:true,data:db.pend}:no;
-case 'pendTutup':{if(!pt)return no;const r=db.pend.find(y=>y.id===p.id);if(r){if(p.buka){r.st='Menunggu';r.jad=null;delete r.alasan}else{r.st='Ditutup';r.jad=null;r.alasan=p.alasan||''}}demoPut(db);return{ok:true}}
-case 'pendHapus':{if(!pt)return no;const r=db.pend.find(y=>y.id===p.id);if(!r)return{ok:false,error:'Pendaftaran tidak ditemukan'};if(r.st!=='Ditutup')return{ok:false,error:'Hanya pendaftaran yang sudah ditutup yang bisa dihapus'};db.pend=db.pend.filter(y=>y.id!==p.id);demoPut(db);return{ok:true}}
-case 'pendSync':{if(!pt)return no;(p.list||[]).forEach(x=>{const r=db.pend.find(y=>y.id===x.id);if(r&&r.st!=='Ditutup'){r.st=x.st;r.jad=x.jad||null}});demoPut(db);return{ok:true}}
-case 'pendMine':{const ids=(p.ids||[]).map(String);return{ok:true,data:db.pend.filter(r=>ids.indexOf(r.id)>=0&&(pt||r.by===me.u))}}
-case 'foto':return pt&&db.foto[p.id]?{ok:true,data:db.foto[p.id]}:{ok:false,error:'Foto tidak ditemukan'};
-case 'pendSubmit':{if(!p.nama||!p.rm||!p.waktu)return{ok:false,error:'Data pendaftaran belum lengkap'};
-const id=uid(),rec=Object.assign({},p,{id,ts:Date.now(),by:me.u,byNama:me.nama,st:'Menunggu',foto:[]});delete rec.fotoData;delete rec.useOld;
-if(p.useOld){for(let i=db.pend.length-1;i>=0;i--)if(nr(db.pend[i].rm)===nr(p.rm)&&(db.pend[i].foto||[]).length){rec.foto=db.pend[i].foto.slice();break}}
-(p.fotoData||[]).slice(0,4).forEach((d,i)=>{const f='f'+id+i;db.foto[f]=d;rec.foto.push(f)});db.pend.push(rec);
-try{_ls.s.call(localStorage,'demo_srv',JSON.stringify(db))}catch(e){_mem=db}return{ok:true,id}}
-case 'cari':{const M={},put=(n,rm,x)=>{const k=nr(rm);if(!k)return;M[k]=Object.assign(M[k]||{nama:n,rm},x)};
-Object.keys(db.data.jadwal||{}).forEach(t=>((db.data.jadwal[t]||{}).items||[]).forEach(i=>put(i.nama,i.rm,{})));(db.data.master||[]).forEach(m=>put(m.nama,m.rm,{tetap:true}));
-[...db.pend].sort((a,b)=>a.ts-b.ts).forEach(r=>{const x={nama:r.nama,rm:r.rm};if(r.lahir)x.lahir=r.lahir;if(r.jk)x.jk=r.jk;if(r.hbs||r.hiv||r.hcv){x.hbs=r.hbs;x.hiv=r.hiv;x.hcv=r.hcv;x.skrTgl=r.skrTgl||''}if((r.foto||[]).length)x.nfoto=r.foto.length;put(r.nama,r.rm,x)});
-const PEN={};[...db.pend].sort((a,b)=>a.ts-b.ts).forEach(r=>{const k=nr(r.rm),e=PEN[k]=PEN[k]||{};
-if(r.thorax){e.thorax=r.thorax;e.thx=r.thx||'';e.thxTgl=r.thxTgl||''}
-if(r.lab&&Object.keys(r.lab).length){e.lab=r.lab;e.labTgl=r.labTgl||''}
-if(r.uf||r.time||r.qb||r.hep){e.prog={uf:r.uf,time:r.time,qb:r.qb,hep:r.hep,trf:r.trf,akses:r.akses,aksesSt:r.aksesSt};e.progTgl=ymd(new Date(r.ts))}});
-Object.keys(M).forEach(k=>{if(PEN[k]&&Object.keys(PEN[k]).length)M[k].pen=PEN[k]});
-let o=Object.keys(M).map(k=>M[k]);const q=String(p.q||'').trim();
-if(p.kind==='r'){const k=nr(q);o=k.length>=5?o.filter(c=>nr(c.rm)===k):[]}else{const t=q.toLowerCase();o=t.length>=4?o.filter(c=>String(c.nama).toLowerCase().indexOf(t)>=0):[]}
-return{ok:true,data:o.slice(0,6)}}}
-return{ok:false,error:'Aksi tidak dikenal'}}
-function demoReset(){if(!confirm('Reset semua data demo (jadwal, pendaftaran, daftar ruangan) ke kondisi awal?'))return;Object.keys(localStorage).filter(k=>k.indexOf('demo_')===0).forEach(k=>_ls.r.call(localStorage,k));location.reload()}
-if(DEMO){document.body.insertAdjacentHTML('beforeend','<div id="demoBar">MODE DEMO · data contoh<button onclick="demoReset()">Reset</button></div>');
-$('#lp1').insertAdjacentHTML('beforeend','<small>PIN demo: <b>'+DEMO_PIN+'</b></small>')}
 
 boot();
 </script></body></html>
