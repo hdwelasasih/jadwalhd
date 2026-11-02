@@ -221,8 +221,66 @@ function ed(id){openForm('j',fi(id))}
 /* ---- Rilis per shift ---- */
 function vRilis(){const col=l=>{const it=urut(act(cur).filter(i=>i.shift===RS&&i.lantai===l)),c=CAP[l],z=cnt(it,l);
 return `<div><div class="lh l${l}">LANTAI ${l}</div><table><tr class="th"><td>NO</td><td>NAMA</td>${RS==='CITO'?'<td>JAM</td>':''}<td>RM</td><td>Ket</td></tr>${it.map((i,x)=>`<tr class="r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}${i.asal==='Rajal'?'':`<span class="as">${i.asal.toUpperCase()}</span>`}</td>${RS==='CITO'?`<td>${fj(i.jam)}</td>`:''}<td>${esc(i.rm)}</td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td></tr>`).join('')}</table><div class="ft">Terisi ${it.length}${RS==='CITO'?' pasien CITO':'/'+c.t+' · Reguler '+z.reg+'/'+z.rt+' · '+z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · ')}</div></div>`};
-return `<div class="bar np"><button class="${RS==='Pagi'?'pri':''}" onclick="RS='Pagi';render()">Shift Pagi</button><button class="${RS==='Siang'?'pri':''}" onclick="RS='Siang';render()">Shift Siang</button><button class="${RS==='CITO'?'pri':''}" onclick="RS='CITO';render()">CITO (24 jam)</button><button onclick="window.print()">🖨 Cetak</button><button onclick="rilis()">✔ Tandai dirilis</button></div><div class="mut np" style="margin-bottom:6px">Screenshot kotak putih di bawah untuk dibagikan ke grup. Pasien batal tidak ditampilkan.</div>
+return `<div class="bar np"><button class="${RS==='Pagi'?'pri':''}" onclick="RS='Pagi';render()">Shift Pagi</button><button class="${RS==='Siang'?'pri':''}" onclick="RS='Siang';render()">Shift Siang</button><button class="${RS==='CITO'?'pri':''}" onclick="RS='CITO';render()">CITO (24 jam)</button><button class="pri" onclick="rilisGambar()">📤 Bagikan gambar</button><button onclick="window.print()">🖨 Cetak</button><button onclick="rilis()">✔ Tandai dirilis</button></div><div class="mut np" style="margin-bottom:6px">Ketuk 📤 Bagikan gambar untuk mengirim jadwal sebagai 1 gambar utuh (semua pasien, tidak terpotong) ke grup WA. Pasien batal tidak ditampilkan.</div>
 <div class="poster"><div class="ph2"><b>JADWAL HEMODIALISA — ${RS==='CITO'?'CITO (24 JAM)':'SHIFT '+RS.toUpperCase()}</b><br><b>${RS==='CITO'?'Layanan 24 jam · sesuai indikasi':'Pukul '+(RS==='Pagi'?'06.00':'12.15')+' WIB'}</b><br>${tgl(cur)}<br><small style="display:inline;color:#555">Instalasi Hemodialisa RSUD Welas Asih</small>${(()=>{const o=RS==='CITO'?{}:stf(cur,RS);return o.p1||o.p2?`<br><small style="display:inline;color:#555">Perawat jaga: Lt.1 = ${o.p1||0} · Lt.2 = ${o.p2||0} · Total ${(o.p1||0)+(o.p2||0)}</small>`:''})()}</div><div class="grid">${col(1)}${col(2)}</div><div class="lg"><span style="background:rgba(255,160,60,.3)">Ranap</span><span style="background:rgba(150,110,230,.3)">IGD</span><span class="k-hep">HBsAg</span><span class="k-hcv">HCV</span><span class="k-iso">ISO TB</span><span class="k-nr">Non Reguler</span></div><div class="cr" style="color:#555">Inovasi by: Epi Abdul Wahid</div></div>`}
+
+/* ---- Gambar rilis satu halaman (tidak terpotong, untuk dibagikan ke WA) ---- */
+function rilisCanvas(mk){
+const W=1080,P=24,G=16,CW=(W-2*P-G)/2,F='"Segoe UI",Roboto,Arial,sans-serif',cito=RS==='CITO';
+const KB={'k-hep':'#f08a8a','k-hcv':'#f5a3cf','k-iso':'#8fd8ee','k-nr':'#9be39b','k-o':'#e6e9ee'},RC={Ranap:'#ffe3c4',IGD:'#e0d4f8'};
+const cols=[1,2].map(l=>{const it=urut(act(cur).filter(i=>i.shift===RS&&i.lantai===l)),c=CAP[l],z=cnt(it,l);
+return{l,it,ft:'Terisi '+it.length+(cito?' pasien CITO':'/'+c.t+' · Reguler '+z.reg+'/'+z.rt+' · '+z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · '))}});
+const o=cito?{}:stf(cur,RS),jaga=(o.p1||o.p2)?'Perawat jaga: Lt.1 = '+(o.p1||0)+' · Lt.2 = '+(o.p2||0)+' · Total '+((o.p1||0)+(o.p2||0)):'';
+const hd=[[cito?'JADWAL HEMODIALISA — CITO (24 JAM)':'JADWAL HEMODIALISA — SHIFT '+RS.toUpperCase(),'bold 30px',34],
+[cito?'Layanan 24 jam · sesuai indikasi':'Pukul '+(RS==='Pagi'?'06.00':'12.15')+' WIB','bold 24px',32],
+[tgl(cur),'24px',32],['Instalasi Hemodialisa RSUD Welas Asih','20px',28]];
+if(jaga)hd.push([jaga,'20px',28]);
+const n=Math.max(1,cols[0].it.length,cols[1].it.length);
+const FIX=P+hd.reduce((s,h)=>s+h[2],0)+10+40+38+36+50+30+P;
+/* makin banyak pasien, baris makin rapat (tetap 1 gambar, rasio layar HP); minimal 30px agar terbaca */
+const RH=Math.max(30,Math.min(46,Math.floor((2300-FIX)/n))),FS=Math.max(14,Math.min(21,Math.round(RH*.46))),SH=RH>=38;
+const H=FIX+n*RH,S=Math.min(2,4000/H);
+const c=mk?mk():document.createElement('canvas');c.width=Math.round(W*S);c.height=Math.round(H*S);
+const x=c.getContext('2d');x.scale(S,S);x.fillStyle='#fff';x.fillRect(0,0,W,H);x.textBaseline='middle';
+const fit=(s,w,px,b)=>{s=String(s==null?'':s);let z=px;const f=()=>x.font=(b?'bold ':'')+z+'px '+F;f();while(z>13&&x.measureText(s).width>w){z--;f()}
+if(x.measureText(s).width>w){while(s.length>1&&x.measureText(s+'…').width>w)s=s.slice(0,-1);s+='…'}return s};
+const rr=(px,py,w,h,r,fill)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();x.fillStyle=fill;x.fill()};
+let y=P;x.textAlign='center';
+hd.forEach((h,i)=>{x.font=h[1]+' '+F;x.fillStyle=i>2?'#555':'#1b2430';x.fillText(h[0],W/2,y+h[2]/2);y+=h[2]});
+y+=10;const y0=y;
+cols.forEach((col,ci)=>{const X=P+ci*(CW+G);let yy=y0;
+x.fillStyle=col.l===1?'#cfe8c9':'#cfdcf5';x.fillRect(X,yy,CW,40);x.fillStyle='#1b2430';x.textAlign='center';x.font='bold 22px '+F;x.fillText('LANTAI '+col.l,X+CW/2,yy+20);yy+=40;
+const wN=44,wK=110,wR=118,wJ=cito?72:0,wNm=CW-wN-wK-wR-wJ;
+x.fillStyle='#3f7d62';x.fillRect(X,yy,CW,38);x.fillStyle='#fff';x.font='bold 18px '+F;
+let cx=X;x.fillText('NO',cx+wN/2,yy+19);cx+=wN;x.fillText('NAMA',cx+wNm/2,yy+19);cx+=wNm;
+if(cito){x.fillText('JAM',cx+wJ/2,yy+19);cx+=wJ}x.fillText('RM',cx+wR/2,yy+19);cx+=wR;x.fillText('Ket',cx+wK/2,yy+19);yy+=38;
+col.it.forEach((i,k)=>{const ry=yy+k*RH,bg=RC[i.asal];if(bg){x.fillStyle=bg;x.fillRect(X,ry,CW,RH)}
+x.strokeStyle='#c9d1da';x.lineWidth=1;x.beginPath();x.moveTo(X,ry+RH-.5);x.lineTo(X+CW,ry+RH-.5);x.stroke();
+x.fillStyle='#1b2430';let px=X;x.textAlign='center';x.font=FS+'px '+F;x.fillText(k+1,px+wN/2,ry+RH/2);px+=wN;
+const lab=(!SH||i.asal==='Rajal'||!i.asal)?'':String(i.asal).toUpperCase();
+x.textAlign='left';x.fillStyle='#1b2430';const nm=fit(i.nama,wNm-8,FS+1,false);x.fillText(nm,px+4,ry+RH/2-(lab?7:0));
+if(lab){x.font='bold 12px '+F;x.fillStyle='#666';x.fillText(lab,px+4,ry+RH/2+12)}px+=wNm;
+x.textAlign='center';x.fillStyle='#1b2430';
+if(cito){x.font=FS+'px '+F;x.fillText(fj(i.jam),px+wJ/2,ry+RH/2);px+=wJ}
+x.font=FS+'px '+F;x.fillText(fit(i.rm,wR-6,FS,false),px+wR/2,ry+RH/2);px+=wR;
+if(i.ket){const t=fit(i.ket,wK-26,Math.max(12,FS-4),true),w=Math.min(wK-10,x.measureText(t).width+16),bh=Math.round(RH*.62);rr(px+(wK-w)/2,ry+RH/2-bh/2,w,bh,6,KB[kc(i.ket)]||KB['k-o']);x.fillStyle='#1b2430';x.fillText(t,px+wK/2,ry+RH/2+1)}});
+if(!col.it.length){x.fillStyle='#888';x.font='italic 18px '+F;x.textAlign='center';x.fillText('— belum ada pasien —',X+CW/2,yy+RH/2)}
+x.strokeStyle='#c9d1da';x.strokeRect(X+.5,y0+.5,CW-1,40+38+n*RH-1);
+x.fillStyle='#555';x.textAlign='center';x.fillText(fit(col.ft,CW-8,17,false),X+CW/2,y0+40+38+n*RH+18)});
+y=y0+40+38+n*RH+36+8;
+const lg=[['Ranap',RC.Ranap],['IGD',RC.IGD],['HBsAg',KB['k-hep']],['HCV',KB['k-hcv']],['ISO TB',KB['k-iso']],['Non Reguler',KB['k-nr']]];
+x.font='16px '+F;x.textAlign='left';const ws=lg.map(l=>x.measureText(l[0]).width+22),tot=ws.reduce((a,b)=>a+b,0)+6*(lg.length-1);let lx=(W-tot)/2;
+lg.forEach((l,i)=>{rr(lx,y,ws[i],28,6,l[1]);x.fillStyle='#1b2430';x.fillText(l[0],lx+11,y+15);lx+=ws[i]+6});
+y+=50;x.textAlign='center';x.fillStyle='#555';x.font='16px '+F;x.fillText('Inovasi by: Epi Abdul Wahid',W/2,y+8);
+return c}
+async function rilisGambar(){
+try{const c=rilisCanvas(),blob=await new Promise(r=>c.toBlob(r,'image/png'));
+if(!blob)return toast('Gagal membuat gambar');
+const nm='jadwal-HD-'+(RS==='CITO'?'CITO':'shift-'+RS.toLowerCase())+'-'+cur+'.png',f=new File([blob],nm,{type:'image/png'});
+if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Jadwal HD'});return}catch(e){if(e&&e.name==='AbortError')return}}
+if(window._gu)URL.revokeObjectURL(window._gu);window._gu=URL.createObjectURL(blob);window._gn=nm;
+$('#dlg').innerHTML='<b>Gambar jadwal (1 halaman)</b><div class="mut" style="margin:6px 0">Tekan lama gambar lalu pilih Simpan/Bagikan, atau ketuk Unduh lalu kirim dari galeri ke grup WA.</div><img src="'+window._gu+'" style="width:100%;border:1px solid #ccc;border-radius:8px"><div class="bar" style="margin-top:8px"><button class="pri" onclick="const a=document.createElement(\'a\');a.href=window._gu;a.download=window._gn;a.click()">⬇ Unduh</button><button onclick="$(\'#dlg\').close()">Tutup</button></div>';
+$('#dlg').showModal()}catch(e){toast('Gagal membuat gambar: '+(e.message||e))}}
 
 /* ---- Tempel banyak pasien tetap ---- */
 const normKet=k=>!k?'':/HCV/i.test(k)?'HCV':/HBS|HEP/i.test(k)?'HBsAg':/ISO|\bTB\b/i.test(k)?'ISO TB':/NON\s*REG/i.test(k)?'Non Reguler':k;
