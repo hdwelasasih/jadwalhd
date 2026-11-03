@@ -402,6 +402,11 @@ function fKf(){const e=$('#f_kf');if(!e)return;e.innerHTML=kfWarn($('#f_nama').v
 function kfInfo(el,ev){if(ev)ev.stopPropagation();const c=kfc(),t=el.dataset.t,k=el.dataset.k,list=(t==='r'?c.byR[k]:c.byN[k])||[];
 const seen=new Set(),rows=[];list.forEach(e=>{const s=e.n+' · RM '+e.rm+' · '+e.src;if(!seen.has(s)){seen.add(s);rows.push(s)}});
 const d=$('#dlg');d.innerHTML=`<h3 style="color:${t==='r'?'#d00':'#c2410c'}">⚠ ${t==='r'?'No. RM sama, nama berbeda':'Nama sama, No. RM berbeda'}</h3><small>Ini hanya penanda, data tidak ditolak. Periksa mana yang benar, lalu ubah lewat tombol ✎ (jadwal harian atau pasien tetap).</small>${rows.slice(0,15).map(s=>`<div style="padding:4px 0;border-bottom:1px solid #0001"><small>${esc(s)}</small></div>`).join('')}${rows.length>15?'<small>… dan '+(rows.length-15)+' lainnya</small>':''}<div class="r2" style="margin-top:10px"><span></span><button class="pri" onclick="$('#dlg').close()">Tutup</button></div>`;if(!d.open)d.showModal()}
+let PR=null;
+function kfSebar(old,nw,mid,self){const r={m:0,i:0},ok=x=>rn(x.rm)===rn(old.rm)&&kfNk(x.nama)===kfNk(old.nama),set=x=>{x.nama=nw.nama;x.rm=nw.rm};
+S.master.forEach(m=>{if(m.id===mid||ok(m)){set(m);if(m.id!==self)r.m++}});
+Object.keys(S.jadwal).forEach(d=>(S.jadwal[d].items||[]).forEach(i=>{if(i.id===self)return;if((mid&&i.mid===mid)||ok(i)){set(i);r.i++}}));
+return r}
 function fHint(){const e=$('#f_hint');if(e)e.innerHTML=hdInfo($('#f_rm').value)}
 
 /* ---- Auto-lengkapi Nama <-> RM (pasien non-reguler) ---- */
@@ -485,7 +490,7 @@ $('#dlg').innerHTML=`<h3>${add.length} pasien ditambahkan</h3>${skip.length?`<sm
 function openForm(mode,o){FM={mode,id:o.id};FAn=FAr=false;const m=mode==='m';
 $('#dlg').innerHTML=`<h3>${m?'Pasien tetap':(o.id?'Ubah jadwal pasien':'Tambah pasien (non-reguler)')}</h3>
 ${m||o.id?'':`<label>📋 Tempel teks <small>(Nama, No RM, lantai 1/2, ket HBsAg/HCV, shift pagi/siang — urutan bebas; banyak pasien = satu baris per pasien)</small><textarea id="f_tmp" rows="3" placeholder="contoh: Nama Pasien 000000 1 HBsAg Siang" onpaste="setTimeout(fTempel,0)" oninput="fTempel()" style="width:100%;box-sizing:border-box"></textarea></label><div id="f_tmpinfo"></div>`}
-<label>Nama<input id="f_nama" value="${esc(o.nama)}" oninput="${m?'':'fCari(\'nama\');'}fKf()" autocomplete="off"></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" oninput="${m?'':'fCari(\'rm\');fHint();'}fKf()" autocomplete="off"></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}<div id="f_kf"></div>
+<label>Nama<input id="f_nama" value="${esc(o.nama)}" oninput="${m?'':'fCari(\'nama\');'}fKf()" autocomplete="off"></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" oninput="${m?'':'fCari(\'rm\');fHint();'}fKf()" autocomplete="off"></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}<div id="f_kf"></div>${m||!o.id?'':'<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px"><input type="checkbox" id="f_prop" checked style="width:auto;margin-top:3px"><span>Terapkan perbaikan nama / No. RM ini juga ke Pasien Tetap dan jadwal lain milik pasien ini</span></label>'}
 <div class="r2"><label>Asal<select id="f_asal">${sel(['Rajal','Ranap','IGD'],o.asal)}</select></label><label>${m?'Shift utama':'Shift'}<select id="f_shift"${m?' onchange="fSh0()"':' onchange="fJam()"'}>${sel(m?['Pagi','Siang']:['Pagi','Siang','CITO'],o.shift)}</select></label></div>
 <div class="r2"><label>Lantai<select id="f_lantai">${sel([1,2],o.lantai)}</select></label><label>Ket<input id="f_ket" list="kets" value="${esc(o.ket)}"></label></div>
 ${m?'':`<label id="f_jamw" style="${o.shift==='CITO'?'':'display:none'}">Jam layanan CITO<input type="time" id="f_jam" value="${esc(o.jam||'')}"></label>`}
@@ -496,11 +501,11 @@ $('#dlg').showModal();fKf()}
 function fJam(){const w=$('#f_jamw');if(w)w.style.display=$('#f_shift').value==='CITO'?'':'none'}
 function fHr(d){const c=document.querySelector('.fh[value="'+d+'"]');$('#fs'+d).disabled=!c.checked}
 function fSh0(){const v=$('#f_shift').value;document.querySelectorAll('.fs').forEach(x=>x.value=v)}
-function okForm(){const g=i=>$('#f_'+i).value.trim(),nama=g('nama');if(!nama){$('#f_nama').focus();return}
+function okForm(){PR=null;const g=i=>$('#f_'+i).value.trim(),nama=g('nama');if(!nama){$('#f_nama').focus();return}
 const d={nama,rm:g('rm'),asal:g('asal'),shift:g('shift'),lantai:+g('lantai'),ket:g('ket')};if(FM.mode!=='m')d.jam=d.shift==='CITO'?($('#f_jam')?$('#f_jam').value:''):'';
-if(FM.mode==='m'){d.hari=[...document.querySelectorAll('.fh:checked')].map(x=>+x.value);d.jd={};d.hari.forEach(h=>{const v=$('#fs'+h).value;if(v!==d.shift)d.jd[h]={shift:v}});const m=S.master.find(x=>x.id===FM.id);if(m)Object.assign(m,d);else S.master.push({id:uid(),aktif:true,...d})}
-else{const day=J(cur),i=day.items.find(x=>x.id===FM.id);if((!i||(i.status!=='Batal'&&(i.shift!==d.shift||i.lantai!==d.lantai)))&&penuh(d.shift,d.lantai,FM.id)){toast(msgPenuh(d.shift,d.lantai));return}if(i)Object.assign(i,d);else day.items.push({id:uid(),...d,ket:d.ket||'Non Reguler',jenis:'Tambahan',status:'Aktif'});day.rilis=null}
-save();$('#dlg').close();render()}
+if(FM.mode==='m'){d.hari=[...document.querySelectorAll('.fh:checked')].map(x=>+x.value);d.jd={};d.hari.forEach(h=>{const v=$('#fs'+h).value;if(v!==d.shift)d.jd[h]={shift:v}});const m=S.master.find(x=>x.id===FM.id);if(m){const ch=m.nama!==d.nama||m.rm!==d.rm,old={nama:m.nama,rm:m.rm};Object.assign(m,d);if(ch)PR=kfSebar(old,{nama:d.nama,rm:d.rm},m.id,m.id)}else S.master.push({id:uid(),aktif:true,...d})}
+else{const day=J(cur),i=day.items.find(x=>x.id===FM.id);if((!i||(i.status!=='Batal'&&(i.shift!==d.shift||i.lantai!==d.lantai)))&&penuh(d.shift,d.lantai,FM.id)){toast(msgPenuh(d.shift,d.lantai));return}if(i){const ch=i.nama!==d.nama||i.rm!==d.rm,old={nama:i.nama,rm:i.rm,mid:i.mid},pp=$('#f_prop');Object.assign(i,d);if(ch&&pp&&pp.checked)PR=kfSebar(old,{nama:d.nama,rm:d.rm},old.mid,i.id)}else day.items.push({id:uid(),...d,ket:d.ket||'Non Reguler',jenis:'Tambahan',status:'Aktif'});day.rilis=null}
+save();$('#dlg').close();render();if(PR&&(PR.m||PR.i))toast('Tersimpan. Diperbarui juga: '+(PR.m?'Pasien Tetap '+PR.m+(PR.i?', ':''):'')+(PR.i?'jadwal lain '+PR.i:''))}
 /* ---- Pendaftaran HD rawat inap ---- */
 let PEND=[],pLast=0,seen=null,RT='form',FOTO=[],MINE=[],WAMSG='',OLD=null,LK={},lkT=null,PF='belum';
 const ST_TETAP='Pasien HD Punya Jadwal Tetap',ST_BARU='Pasien HD Baru/Non Reguler (Belum punya Jadwal Tetap)';
@@ -587,9 +592,11 @@ if(kind==='n'&&q.length<4||kind==='r'&&q.replace(/\D/g,'').length<5){$('#lk_'+ki
 lkT=setTimeout(async()=>{try{const r=await api('cari',{kind,q});if(!r.ok||gv(id).trim().replace(/\s+/g,' ')!==q)return;const L=r.data;
 if(!LKP)$('#lk_n').innerHTML=$('#lk_r').innerHTML='';
 if(!L.length&&!LKP){$('#lk_n').innerHTML='<small>Belum ada data pasien ini (pasien baru). Isi identitas secara manual.</small>';return}
-if(kind==='r'){if(L.length===1){LK=L;lkPick(0)}else if(L.length>1){LK=L;$('#lk_r').innerHTML='<div class="note">Ada beberapa data dengan No. RM ini. Pilih yang benar:</div>'+lkBtns(L)}return}
+if(kind==='r'){const tn=gv('g_nama').trim();
+if(tn&&!LKP&&L.length&&L.every(c=>kfNk(c.nama)!==kfNk(tn))){LK=L;$('#lk_r').innerHTML=`<div class="note" style="border:1px solid #d00;color:#d00"><b>⚠ No. RM ini sudah terdaftar atas nama ${L.slice(0,3).map(c=>esc(c.nama)).join(' / ')}</b>, berbeda dengan nama yang Anda isi. Mungkin salah ketik No. RM atau nama. Anda tetap bisa melanjutkan dengan data yang Anda isi (akan ditandai untuk diperiksa petugas), atau ketuk di bawah untuk memakai data yang sudah tersimpan:</div>`+lkBtns(L);return}
+if(L.length===1){LK=L;lkPick(0)}else if(L.length>1){LK=L;$('#lk_r').innerHTML='<div class="note">Ada beberapa data dengan No. RM ini. Pilih yang benar:</div>'+lkBtns(L)}return}
 const ex=L.filter(c=>String(c.nama).trim().toLowerCase()===q.toLowerCase());
-if(ex.length===1){LK=ex;lkPick(0);return}
+if(ex.length===1){const tr=gv('g_rm').trim();if(tr&&!LKP&&rn(tr)!==rn(ex[0].rm)){LK=ex;$('#lk_n').innerHTML=`<div class="note" style="border:1px solid #d00;color:#d00"><b>⚠ Nama ini pernah terdaftar dengan No. RM ${esc(ex[0].rm)}</b>, berbeda dengan No. RM yang Anda isi. Periksa kembali, mungkin salah ketik. Anda tetap bisa melanjutkan dengan data yang Anda isi (akan ditandai untuk diperiksa petugas), atau ketuk di bawah untuk memakai data yang sudah tersimpan:</div>`+lkBtns(ex);return}LK=ex;lkPick(0);return}
 if(ex.length>1){LK=ex;$('#lk_r').innerHTML=`<div class="note">Ada ${ex.length} pasien bernama <b>${esc(q)}</b> dengan No. RM berbeda. Pilih yang sesuai:</div>`+lkBtns(ex);return}
 if(L.length){LK=L;$('#lk_n').innerHTML='<div class="note">Pasien serupa pernah terdaftar. Ketuk untuk mengisi otomatis:</div>'+lkBtns(L)}
 }catch(e){}},450)}
