@@ -28,6 +28,8 @@ td button{padding:2px 6px;border-radius:6px}
 .k{padding:2px 7px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
 .k{color:#1b2430}.k-hep{background:#f08a8a}.k-hcv{background:#f5a3cf}.k-iso{background:#8fd8ee}.k-nr{background:#9be39b}.k-o{background:#e6e9ee}tr.r-Ranap td{background:rgba(255,160,60,.3)}tr.r-IGD td{background:rgba(150,110,230,.3)}.as{font-size:10px;font-weight:700;margin-left:5px;opacity:.75}.poster{background:#fff;color:#1b2430;border-radius:10px;padding:10px;max-width:760px;margin:auto}.poster table{background:#fff}.poster td{border-color:#c9d1da;padding:3px 6px}.poster .th td{background:#3f7d62;color:#fff;font-weight:700;text-align:center}.poster .ph2{text-align:center;margin-bottom:8px}.poster .lh{border-radius:0;justify-content:center;color:#1b2430}.poster .l1{background:#cfe8c9}.poster .l2{background:#cfdcf5}.poster .iso td{background:#eee;color:#777;font-style:italic;font-size:12px}.ft{font-size:12px;padding:4px 2px;color:#555}.lg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:11px}.lg span{padding:2px 7px;border-radius:5px}.poster .grid{grid-template-columns:1fr 1fr;gap:6px}@media(max-width:600px){.poster{padding:6px}.poster td{font-size:11px;padding:2px 3px}.poster .k{font-size:10px;padding:1px 4px}.poster .as{display:block;margin:0}.poster .ph2{font-size:12px}}
 .tb{color:var(--pri)}
+.kfr{color:#d00;font-weight:700;cursor:pointer}.kfo{color:#c2410c;font-weight:700;cursor:pointer}
+:root[data-theme="dark"] .kfr{color:#ff6b6b}:root[data-theme="dark"] .kfo{color:#fb923c}
 .br{display:flex;align-items:center;gap:8px;margin:4px 0}.br span{width:62px;font-size:12px}.br i{flex:1;background:var(--oth);height:10px;border-radius:5px;overflow:hidden}.br u{display:block;height:100%;background:var(--pri)}.br b{width:26px;text-align:right}
 dialog{border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);width:min(92vw,420px)}
 dialog label{display:block;margin:6px 0;font-size:12px;color:var(--mut)}dialog input,dialog select{width:100%;box-sizing:border-box;margin-top:2px;color:var(--tx)}
@@ -149,9 +151,6 @@ catch(e){stat('Gagal menyimpan (offline?). Ketuk untuk coba lagi','#c00')}
 saving=false;if(dirty&&!conflict)push()}
 function backup(){const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='jadwal-hd-'+ymd(new Date())+'.json';a.click()}
 function restore(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.master||!d.jadwal)throw 0;const rev=S._rev;S=d;S._rev=rev;save();render();toast('Data dipulihkan')}catch(e){toast('File tidak valid')}};r.readAsText(f)}
-function seed(){const A=['Rajal','Ranap','IGD'],K=['','','HBsAg','','HCV','','ISO TB','','','','',''];
-for(let i=0;i<14;i++)S.master.push({id:uid(),nama:'Pasien Contoh '+pad(i+1),rm:'00-0000'+pad(i+1),asal:A[i%4==3?2:i%5==4?1:0],hari:i%2?[2,4,6]:[1,3,5],shift:i%4<2?'Pagi':'Siang',lantai:i%3==0?2:1,ket:K[i%12],aktif:true});
-S.seeded=true;save()}
 const J=d=>S.jadwal[d]||(S.jadwal[d]={items:[],rilis:null});
 const act=d=>(S.jadwal[d]?.items||[]).filter(i=>i.status!=='Batal');
 const hasStf=j=>Object.values(j.staff||{}).some(o=>o.p1||o.p2||o.m1||o.m2);
@@ -179,7 +178,7 @@ function go(v){if(v==='master'&&V!=='master')MQ='';V=v;render()}
 function liftBar(){const v=$('#vbar'),m=$('#main');if(!v||!m)return;v.innerHTML='';const c=[...m.children];let n=({dash:1,harian:1,pend:1,rilis:1,master:1,riwayat:2})[V]||0;
 if(V==='dash'&&c[1]&&c[1].classList.contains('card')&&c[1].querySelector(':scope>button.pri'))n=2;
 c.slice(0,n).forEach(e=>v.appendChild(e))}
-function render(){$('#dt').value=cur;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===V));$('#main').innerHTML=({dash:vDash,harian:vHarian,pend:()=>{pendRefresh();return vPend()},rilis:vRilis,master:vMaster,riwayat:vRiwayat})[V]();liftBar()}
+function render(){KFC=null;$('#dt').value=cur;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===V));$('#main').innerHTML=({dash:vDash,harian:vHarian,pend:()=>{pendRefresh();return vPend()},rilis:vRilis,master:vMaster,riwayat:vRiwayat})[V]();liftBar()}
 
 /* ---- Dasbor ---- */
 const bar=(l,v,m)=>`<div class="br"><span>${l}</span><i><u style="width:${m?v/m*100:0}%"></u></i><b>${v}</b></div>`;
@@ -199,7 +198,7 @@ ${pdv.map(p=>bar('Tgl '+p[0],p[1],mx)).join('')||'<span class="mut">Belum ada da
 
 /* ---- Harian ---- */
 function blok(sh,l){const it=urut(J(cur).items.filter(i=>i.shift===sh&&i.lantai===l)),a=it.filter(i=>i.status!=='Batal'),n=a.length,c=CAP[l],z=cnt(a,l),ot=a.filter(i=>!isoOf(i.ket,l)&&/HBS|HEP|ISO|\bTB\b/i.test(i.ket||'')).length,bad=sh==='CITO'?ot>0:(z.r.some(x=>x.u>x.i)||z.reg>z.rt||ot>0||n>lim(sh,l));
-return `<div><div class="lh l${l}">Lantai ${l}<span style="${bad?'color:#c00':''}">${bad?'⚠ ':''}${sh==='CITO'?n+' pasien':n+'/'+lim(sh,l)}</span></div>${sh==='CITO'?'':`<small>Reguler ${z.reg}/${z.rt} · ${z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · ')}</small>`}${bad?`<small style="color:#c00">${ot?'Ada pasien HBsAg/ISO TB di lantai yang tidak punya ruang isolasinya. ':''}Periksa kapasitas: reguler maks ${z.rt}, isolasi melebihi batas di atas.</small>`:''}<table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}${i.jenis==='Tambahan'?' <b class="tb">+</b>':''}<small>${esc(i.rm)} · ${esc(i.asal)}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td><td class="np"><button onclick="ed('${i.id}')">✎</button> <button onclick="bt('${i.id}')">${i.status==='Batal'?'↺':'⊘'}</button> <button onclick="del('${i.id}')">🗑</button></td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}
+return `<div><div class="lh l${l}">Lantai ${l}<span style="${bad?'color:#c00':''}">${bad?'⚠ ':''}${sh==='CITO'?n+' pasien':n+'/'+lim(sh,l)}</span></div>${sh==='CITO'?'':`<small>Reguler ${z.reg}/${z.rt} · ${z.r.map(x=>x.n+' '+x.u+'/'+x.i).join(' · ')}</small>`}${bad?`<small style="color:#c00">${ot?'Ada pasien HBsAg/ISO TB di lantai yang tidak punya ruang isolasinya. ':''}Periksa kapasitas: reguler maks ${z.rt}, isolasi melebihi batas di atas.</small>`:''}<table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${kfN(i.nama,i.rm)}${i.jenis==='Tambahan'?' <b class="tb">+</b>':''}<small>${esc(i.rm)} · ${esc(i.asal)}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td><td class="np"><button onclick="ed('${i.id}')">✎</button> <button onclick="bt('${i.id}')">${i.status==='Batal'?'↺':'⊘'}</button> <button onclick="del('${i.id}')">🗑</button></td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}
 function vHarian(){const d=J(cur);
 return `<div class="bar np"><button class="pri" onclick="tarik()">⤓ Tarik jadwal rutin</button><button onclick="tambah()">＋ Tambah pasien</button><button onclick="cekForm()">🔍 Cek riwayat HD</button><button onclick="rilis()">✔ Tandai dirilis</button><button onclick="go('rilis')">🖨 Lihat/cetak rilis</button><button onclick="toggleSide()">${SIDE?'⇅ Bertumpuk':'⇄ Berdampingan'}</button><span class="mut">${d.rilis?'Dirilis '+new Date(d.rilis).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'Draf (tersimpan otomatis)'}</span></div>
 <div class="ph"><b>JADWAL HEMODIALISA — ${tgl(cur).toUpperCase()}</b><br>Instalasi Hemodialisa RSUD Welas Asih</div>
@@ -293,12 +292,12 @@ function bulkForm(){$('#dlg').innerHTML=`<h3>Tempel banyak pasien tetap</h3>
 <label>Data<textarea id="b_txt" rows="8" oninput="bulkPrev()" style="width:100%;box-sizing:border-box;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px"></textarea></label>
 <div id="b_prev" class="mut"></div>
 <div class="r2"><button onclick="$('#dlg').close()">Batal</button><button class="pri" onclick="bulkOk()">Simpan</button></div>`;$('#dlg').showModal()}
-function bulkPrev(){const r=bulkParse($('#b_txt').value),ada=new Set(S.master.map(m=>m.rm).filter(Boolean)),dup=r.filter(x=>x.rm&&ada.has(x.rm)).length,nr=r.filter(x=>!x.rm).length;
-$('#b_prev').innerHTML=r.length?`<b>${r.length}</b> pasien terbaca${dup?` · ${dup} sudah ada (hari ditambah)`:''}${nr?` · ${nr} tanpa RM`:''}<br>${r.slice(0,3).map(x=>esc(x.nama)+' ('+esc(x.rm||'-')+')'+(x.ket?' ['+esc(x.ket)+']':'')).join('<br>')}${r.length>3?'<br>…':''}`:''}
+function bulkPrev(){const r=bulkParse($('#b_txt').value),mm=x=>x.rm&&S.master.find(m=>rn(m.rm)===rn(x.rm)),dup=r.filter(x=>{const e=mm(x);return e&&kfNk(e.nama)===kfNk(x.nama)}).length,kb=r.filter(x=>{const e=mm(x);return e&&kfNk(e.nama)!==kfNk(x.nama)}),nr=r.filter(x=>!x.rm).length;
+$('#b_prev').innerHTML=r.length?`<b>${r.length}</b> pasien terbaca${dup?` · ${dup} sudah ada (hari ditambah)`:''}${nr?` · ${nr} tanpa RM`:''}${kb.length?`<br><span style="color:#d00;font-weight:700">⚠ ${kb.length} RM sama dengan pasien lain tapi nama beda (tetap ditambahkan, ditandai merah): ${kb.slice(0,3).map(x=>esc(x.nama)).join('; ')}</span>`:''}<br>${r.slice(0,3).map(x=>esc(x.nama)+' ('+esc(x.rm||'-')+')'+(x.ket?' ['+esc(x.ket)+']':'')).join('<br>')}${r.length>3?'<br>…':''}`:''}
 function bulkOk(){const hari=[...document.querySelectorAll('.bh:checked')].map(x=>+x.value);if(!hari.length){toast('Pilih minimal satu hari');return}
 const r=bulkParse($('#b_txt').value);if(!r.length){toast('Belum ada data');return}
 let n=0,u=0;
-r.forEach(x=>{const ex=x.rm&&S.master.find(m=>m.rm===x.rm);
+r.forEach(x=>{const ex=x.rm&&S.master.find(m=>rn(m.rm)===rn(x.rm)&&kfNk(m.nama)===kfNk(x.nama));
 if(ex){hari.forEach(h=>{if(!ex.hari.includes(h))ex.hari.push(h)});u++;return}
 S.master.push({id:uid(),aktif:true,nama:x.nama,rm:x.rm,asal:$('#b_asal').value,shift:$('#b_shift').value,lantai:+$('#b_lantai').value,ket:x.ket,hari:hari.slice()});n++});
 save();$('#dlg').close();render();toast(n+' pasien baru'+(u?', '+u+' diperbarui harinya':''))}
@@ -312,7 +311,7 @@ const HF=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],mAk=p=>p.akt
 function mRows(){const q=MQ.trim().toLowerCase(),qd=q.replace(/\D/g,'');
 const all=S.master.filter(p=>!q||String(p.nama).toLowerCase().includes(q)||String(p.rm||'').toLowerCase().includes(q)||(qd.length>=3&&String(p.rm||'').replace(/\D/g,'').includes(qd)));
 const nm=(a,b)=>String(a.nama).localeCompare(String(b.nama)),shown=new Set(),sd=MSIDE?' side':'';
-const item=(p,no)=>`<div class="mp" style="${mAk(p)?'':'opacity:.5'}"><span class="no">${mAk(p)?no:'–'}</span><div class="mi"><b>${esc(p.nama)}</b> ${p.ket?`<span class="k ${kc(p.ket)}">${esc(p.ket)}</span>`:''}<small>${esc(p.rm)} · ${esc(p.asal)} · ${mInfo(p)}</small><div class="ma"><button onclick="openForm('m',S.master.find(x=>x.id==='${p.id}'))">✎</button><button onclick="aktifM('${p.id}')">${mAk(p)?'⏸':'▶'}</button><button onclick="delM('${p.id}',this)">🗑</button></div></div></div>`;
+const item=(p,no)=>`<div class="mp" style="${mAk(p)?'':'opacity:.5'}"><span class="no">${mAk(p)?no:'–'}</span><div class="mi"><b>${kfN(p.nama,p.rm)}</b> ${p.ket?`<span class="k ${kc(p.ket)}">${esc(p.ket)}</span>`:''}<small>${esc(p.rm)} · ${esc(p.asal)} · ${mInfo(p)}</small><div class="ma"><button onclick="openForm('m',S.master.find(x=>x.id==='${p.id}'))">✎</button><button onclick="aktifM('${p.id}')">${mAk(p)?'⏸':'▶'}</button><button onclick="delM('${p.id}',this)">🗑</button></div></div></div>`;
 const act1=l=>new Set(all.filter(p=>+p.lantai===l&&mAk(p)).map(p=>p.id)).size;
 let h=`<div class="mg2${sd}"><div class="glh glh1">LANTAI 1 · ${act1(1)} pasien aktif</div><div class="glh glh2">LANTAI 2 · ${act1(2)} pasien aktif</div></div>`,any=false;
 [1,2,3,4,5,6,0].forEach(d=>['Pagi','Siang'].forEach(sh=>{
@@ -337,7 +336,7 @@ function hapusContoh(){S.master=[];S.jadwal={};S.seeded=false;save();render()}
 
 /* ---- Riwayat ---- */
 function rDetail(k){const d=S.jadwal[k];if(!d)return `<div class="card">Tidak ada layanan HD tercatat pada <b>${tgl(k)}</b>.</div>`;
-return `<div class="card"><b>${tgl(k)}</b><small>${act(k).length} pasien aktif · ${d.rilis?'dirilis':'draf'}</small><div class="bar"><button onclick="cur='${k}';V='harian';render()">Buka</button><button onclick="cur='${k}';V='rilis';render()">🖨 Rilis</button></div></div>`+['Pagi','Siang','CITO'].filter(sh=>sh!=='CITO'||(d.items||[]).some(i=>i.shift==='CITO')).map(sh=>{const it=urut((d.items||[]).filter(i=>i.shift===sh));return `<div class="card"><h3>${sh==='CITO'?'CITO (24 jam)':'Shift '+sh} · ${it.filter(i=>i.status!=='Batal').length} pasien</h3><table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${esc(i.nama)}<small>${esc(i.rm)} · ${esc(i.asal)} · Lt.${i.lantai}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}).join('')}
+return `<div class="card"><b>${tgl(k)}</b><small>${act(k).length} pasien aktif · ${d.rilis?'dirilis':'draf'}</small><div class="bar"><button onclick="cur='${k}';V='harian';render()">Buka</button><button onclick="cur='${k}';V='rilis';render()">🖨 Rilis</button></div></div>`+['Pagi','Siang','CITO'].filter(sh=>sh!=='CITO'||(d.items||[]).some(i=>i.shift==='CITO')).map(sh=>{const it=urut((d.items||[]).filter(i=>i.shift===sh));return `<div class="card"><h3>${sh==='CITO'?'CITO (24 jam)':'Shift '+sh} · ${it.filter(i=>i.status!=='Batal').length} pasien</h3><table>${it.map((i,x)=>`<tr class="${i.status==='Batal'?'bt':''} r-${i.asal}"><td>${x+1}</td><td>${kfN(i.nama,i.rm)}<small>${esc(i.rm)} · ${esc(i.asal)} · Lt.${i.lantai}${i.jam?' · 🕐 '+fj(i.jam):''}</small></td><td>${i.ket?`<span class="k ${kc(i.ket)}">${esc(i.ket)}</span>`:''}</td></tr>`).join('')||'<tr><td class="mut">Kosong</td></tr>'}</table></div>`}).join('')}
 function vRiwayat(){const ks=Object.keys(S.jadwal).sort().reverse();
 return `<div class="bar"><button onclick="backup()">⬇ Cadangkan (.json)</button>${ks.length?'<button onclick="kosongkanRiwayat()" style="color:#c00">🗑 Kosongkan semua riwayat</button>':''}<label class="mut">Pulihkan: <input type="file" accept=".json" onchange="restore(this.files[0])"></label></div>
 <div class="card"><div class="bar"><label class="mut">🔍 Cari tanggal layanan HD <input type="date" value="${RQ}" onchange="RQ=this.value;render()"></label>${RQ?`<button onclick="RQ='';render()">✕ Hapus pencarian</button>`:''}</div><small>Pilih tanggal, jadwal HD hari itu langsung tampil.</small></div>
@@ -372,6 +371,37 @@ function cekForm(){$('#dlg').innerHTML=`<h3>Cek riwayat HD terakhir</h3>
 function cekRun(){$('#c_res').innerHTML=hdInfo($('#c_rm').value)}
 function cekSimpan(){const rm=$('#c_rm').value.trim(),t=$('#c_tgl').value,k=rn(rm);if(!k){toast('Isi No. RM dulu');return}if(!t){toast('Isi tanggal HD terakhir');return}
 S.lastHD=S.lastHD||{};S.lastHD[k]={rm,nama:$('#c_nm').value.trim(),tgl:t};save();cekRun();toast('Tanggal HD terakhir dicatat')}
+/* ---- Penanda RM kembar / nama beda (hanya menandai, tidak menolak) ---- */
+let KFC=null;
+const kfNk=s=>String(s||'').toLowerCase().replace(/\b(tn|ny|nn|an|by|bpk|bapak|ibu|sdr|sdri|tuan|nyonya)\b\.?/g,' ').replace(/[^a-z\u00c0-\u024f ]/g,' ').replace(/\s+/g,' ').trim();
+function kfBuild(){const L=[],lo=new Date();lo.setDate(lo.getDate()-45);const lim=ymd(lo);
+S.master.forEach(m=>{if(m.aktif!==false)L.push({n:m.nama,rm:m.rm,id:m.id,src:'Pasien tetap'})});
+Object.keys(S.jadwal).forEach(d=>{if(d<lim)return;(S.jadwal[d].items||[]).forEach(i=>{if(i.status!=='Batal')L.push({n:i.nama,rm:i.rm,id:i.id,mid:i.mid,src:'Jadwal '+tglS(d)+' · Lt.'+i.lantai+' '+i.shift})})});
+(PEND||[]).forEach(p=>{if(p.st!=='Ditutup'&&p.st!=='Dibatalkan')L.push({n:p.nama,rm:p.rm,id:p.id,src:'Pendaftaran'})});
+const byR={},byN={};
+L.forEach(e=>{e.k=rn(e.rm);e.nk=kfNk(e.n);if(e.k)(byR[e.k]=byR[e.k]||[]).push(e);if(e.nk.indexOf(' ')>0&&e.nk.length>=5)(byN[e.nk]=byN[e.nk]||[]).push(e)});
+const R={},N={};
+Object.keys(byR).forEach(k=>{if(new Set(byR[k].map(e=>e.nk)).size>1)R[k]=1});
+Object.keys(byN).forEach(k=>{if(new Set(byN[k].map(e=>e.k).filter(Boolean)).size>1)N[k]=1});
+return KFC={t:Date.now(),R,N,byR,byN}}
+const kfc=()=>KFC&&Date.now()-KFC.t<2000?KFC:kfBuild();
+function kfN(nama,rm){const c=kfc(),k=rn(rm),nk=kfNk(nama);
+if(k&&c.R[k])return `<span class="kfr" data-t="r" data-k="${esc(k)}" onclick="kfInfo(this,event)">${esc(nama)} ⚠</span>`;
+if(c.N[nk])return `<span class="kfo" data-t="n" data-k="${esc(nk)}" onclick="kfInfo(this,event)">${esc(nama)} ⚠</span>`;
+return esc(nama)}
+function kfTeks(nama,rm,ex){const c=kfc(),k=rn(rm),nk=kfNk(nama),out={r:[],n:[]};if(!k)return out;
+const sm=new Set(),sn=new Set();
+(c.byR[k]||[]).forEach(e=>{if(e.nk===nk||(ex&&(e.id===ex||e.mid===ex)))return;const s=e.n+' ('+e.src.split(' · ')[0]+')';if(!sm.has(s)){sm.add(s);out.r.push(s)}});
+if(nk.indexOf(' ')>0&&nk.length>=5)(c.byN[nk]||[]).forEach(e=>{if(!e.k||e.k===k||(ex&&(e.id===ex||e.mid===ex)))return;const s=e.rm+' ('+e.src.split(' · ')[0]+')';if(!sn.has(s)){sn.add(s);out.n.push(s)}});
+return out}
+function kfWarn(nama,rm,ex){const t=kfTeks(nama,rm,ex);let o='';
+if(t.r.length)o+=`<small style="color:#d00;display:block;font-weight:700">⚠ No. RM ini sudah tercatat atas nama: ${t.r.slice(0,4).map(esc).join('; ')}${t.r.length>4?' …':''}. Tetap bisa disimpan — periksa lagi nama/RM-nya.</small>`;
+if(t.n.length)o+=`<small style="color:#c2410c;display:block;font-weight:700">⚠ Nama ini sudah tercatat dengan RM lain: ${t.n.slice(0,4).map(esc).join('; ')}${t.n.length>4?' …':''}. Bisa jadi salah ketik RM.</small>`;
+return o}
+function fKf(){const e=$('#f_kf');if(!e)return;e.innerHTML=kfWarn($('#f_nama').value,$('#f_rm').value,FM&&FM.id)}
+function kfInfo(el,ev){if(ev)ev.stopPropagation();const c=kfc(),t=el.dataset.t,k=el.dataset.k,list=(t==='r'?c.byR[k]:c.byN[k])||[];
+const seen=new Set(),rows=[];list.forEach(e=>{const s=e.n+' · RM '+e.rm+' · '+e.src;if(!seen.has(s)){seen.add(s);rows.push(s)}});
+const d=$('#dlg');d.innerHTML=`<h3 style="color:${t==='r'?'#d00':'#c2410c'}">⚠ ${t==='r'?'No. RM sama, nama berbeda':'Nama sama, No. RM berbeda'}</h3><small>Ini hanya penanda, data tidak ditolak. Periksa mana yang benar, lalu ubah lewat tombol ✎ (jadwal harian atau pasien tetap).</small>${rows.slice(0,15).map(s=>`<div style="padding:4px 0;border-bottom:1px solid #0001"><small>${esc(s)}</small></div>`).join('')}${rows.length>15?'<small>… dan '+(rows.length-15)+' lainnya</small>':''}<div class="r2" style="margin-top:10px"><span></span><button class="pri" onclick="$('#dlg').close()">Tutup</button></div>`;if(!d.open)d.showModal()}
 function fHint(){const e=$('#f_hint');if(e)e.innerHTML=hdInfo($('#f_rm').value)}
 
 /* ---- Auto-lengkapi Nama <-> RM (pasien non-reguler) ---- */
@@ -395,7 +425,7 @@ L.sort((a,b)=>(b.last||'').localeCompare(a.last||'')||a.nama.localeCompare(b.nam
 if(!FS.length){box.innerHTML='';fHint();return}
 const hd=ex.length>1?`<small style="color:#b45309">Ada ${ex.length} pasien dengan ${src==='rm'?'RM':'nama'} ini — pilih yang benar:</small>`:'<small>Ketuk bila sesuai:</small>';
 box.innerHTML=hd+FS.map((e,x)=>{const dn=e.last?Math.round((pd(today)-pd(e.last))/864e5):null;return `<button type="button" class="sg" onclick="fPick(${x})">${esc(e.nama)} · ${esc(e.rm)}<small>${e.last?'HD terakhir '+tg2(e.last)+' ('+(dn===0?'hari ini':dn+' hari lalu')+')':'belum ada riwayat HD'}</small></button>`}).join('');fHint()}
-function fPick(i){const e=FS[i];if(!e)return;$('#f_nama').value=e.nama;$('#f_rm').value=e.rm;FAn=FAr=false;$('#f_sug').innerHTML='';fHint()}
+function fPick(i){const e=FS[i];if(!e)return;$('#f_nama').value=e.nama;$('#f_rm').value=e.rm;FAn=FAr=false;$('#f_sug').innerHTML='';fHint();fKf()}
 
 /* ---- Tempel teks -> isi otomatis form pasien non-reguler ---- */
 function parseTempel(t){
@@ -426,9 +456,10 @@ function fTempel(){const el=$('#f_tmp');if(!el)return;const o=$('#f_tmpinfo');
 if(!el.value.trim()){o.innerHTML='';FB=[];return}
 const L=parseBanyak(el.value);if(!L.length){o.innerHTML='';FB=[];return}
 if(L.length>1){FB=L;const day=J(cur);
-const rows=L.map((r,x)=>{const dup=r.rm&&(day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm))||L.slice(0,x).some(q=>fLeng(q)&&q.rm&&rn(q.rm)===rn(r.rm)));const miss=[!r.nama&&'Nama',!r.lantai&&'Lantai',!r.shift&&'Shift'].filter(Boolean);
+const rows=L.map((r,x)=>{const dup=r.rm&&(day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm)&&kfNk(i.nama)===kfNk(r.nama))||L.slice(0,x).some(q=>fLeng(q)&&q.rm&&rn(q.rm)===rn(r.rm)&&kfNk(q.nama)===kfNk(r.nama)));
+const kt=kfTeks(r.nama,r.rm),kl=L.filter((q,y)=>y!==x&&q.rm&&rn(q.rm)===rn(r.rm)&&kfNk(q.nama)!==kfNk(r.nama)).map(q=>q.nama);const kfm=kt.r.length||kl.length;const miss=[!r.nama&&'Nama',!r.lantai&&'Lantai',!r.shift&&'Shift'].filter(Boolean);
 const t=esc(r.nama||'(tanpa nama)')+' · '+esc(r.rm||'tanpa RM')+' · '+(r.lantai?'Lt '+r.lantai:'Lt ?')+' · '+(r.shift||'Shift ?')+(r.ket?' · '+esc(r.ket):'');
-return `<div style="padding:3px 0;border-bottom:1px solid #0001"><small style="color:${miss.length||dup?'#b45309':'#15803d'}">${miss.length?'⚠':dup?'⚠':'✓'} ${x+1}. ${t}${miss.length?' — belum terbaca: '+miss.join(', ')+' (dilewati)':''}${dup?' — RM sudah ada di jadwal/daftar ini (dilewati)':''}</small></div>`}).join('');
+return `<div style="padding:3px 0;border-bottom:1px solid #0001"><small style="color:${miss.length||dup?'#b45309':'#15803d'}">${miss.length?'⚠':dup?'⚠':'✓'} ${x+1}. ${t}${kfm?` <span style="color:#d00;font-weight:700">⚠ RM sama dengan nama lain: ${esc(kt.r.concat(kl).slice(0,3).join('; '))} (tetap ditambahkan)</span>`:''}${miss.length?' — belum terbaca: '+miss.join(', ')+' (dilewati)':''}${dup?' — pasien sama sudah ada di jadwal/daftar ini (dilewati)':''}</small></div>`}).join('');
 const n=L.filter(r=>fLeng(r)).length;
 o.innerHTML=`<small><b>${L.length} pasien terbaca</b> — periksa dulu:</small>${rows}<button class="pri" style="width:100%;margin-top:6px" onclick="fSimpanBanyak()">Simpan semua yang lengkap</button><small>Asal diisi sesuai pilihan "Asal" di bawah bila tidak disebut. Yang dilewati bisa ditambah satu per satu.</small>`;return}
 FB=[];const R=L[0];
@@ -443,7 +474,7 @@ o.innerHTML=`<small style="color:#15803d">Terisi: ${ok.join(', ')}${R.asal?', As
 function fSimpanBanyak(){const day=J(cur),asal0=$('#f_asal')?$('#f_asal').value:'Rajal',add=[],skip=[];
 FB.forEach(r=>{const nm=r.nama||'(tanpa nama)';
 if(!fLeng(r)){skip.push(nm+' — data belum lengkap');return}
-if(r.rm&&day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm))){skip.push(nm+' — sudah ada di jadwal hari ini');return}
+if(r.rm&&day.items.some(i=>i.status!=='Batal'&&rn(i.rm)===rn(r.rm)&&kfNk(i.nama)===kfNk(r.nama))){skip.push(nm+' — pasien sama sudah ada di jadwal hari ini');return}
 if(penuh(r.shift,r.lantai)){skip.push(nm+' — '+msgPenuh(r.shift,r.lantai));return}
 day.items.push({id:uid(),nama:r.nama,rm:r.rm,asal:r.asal||asal0,shift:r.shift,lantai:r.lantai,ket:r.ket||'Non Reguler',jam:r.shift==='CITO'?(r.jam||''):'',jenis:'Tambahan',status:'Aktif'});add.push(r.nama)});
 if(add.length){day.rilis=null;save();render()}
@@ -454,14 +485,14 @@ $('#dlg').innerHTML=`<h3>${add.length} pasien ditambahkan</h3>${skip.length?`<sm
 function openForm(mode,o){FM={mode,id:o.id};FAn=FAr=false;const m=mode==='m';
 $('#dlg').innerHTML=`<h3>${m?'Pasien tetap':(o.id?'Ubah jadwal pasien':'Tambah pasien (non-reguler)')}</h3>
 ${m||o.id?'':`<label>📋 Tempel teks <small>(Nama, No RM, lantai 1/2, ket HBsAg/HCV, shift pagi/siang — urutan bebas; banyak pasien = satu baris per pasien)</small><textarea id="f_tmp" rows="3" placeholder="contoh: Nama Pasien 000000 1 HBsAg Siang" onpaste="setTimeout(fTempel,0)" oninput="fTempel()" style="width:100%;box-sizing:border-box"></textarea></label><div id="f_tmpinfo"></div>`}
-<label>Nama<input id="f_nama" value="${esc(o.nama)}" ${m?'':'oninput="fCari(\'nama\')" autocomplete="off"'}></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" ${m?'':'oninput="fCari(\'rm\');fHint()" autocomplete="off"'}></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}
+<label>Nama<input id="f_nama" value="${esc(o.nama)}" oninput="${m?'':'fCari(\'nama\');'}fKf()" autocomplete="off"></label><label>No. RM<input id="f_rm" value="${esc(o.rm)}" oninput="${m?'':'fCari(\'rm\');fHint();'}fKf()" autocomplete="off"></label>${m?'':'<div id="f_sug"></div><div id="f_hint"></div>'}<div id="f_kf"></div>
 <div class="r2"><label>Asal<select id="f_asal">${sel(['Rajal','Ranap','IGD'],o.asal)}</select></label><label>${m?'Shift utama':'Shift'}<select id="f_shift"${m?' onchange="fSh0()"':' onchange="fJam()"'}>${sel(m?['Pagi','Siang']:['Pagi','Siang','CITO'],o.shift)}</select></label></div>
 <div class="r2"><label>Lantai<select id="f_lantai">${sel([1,2],o.lantai)}</select></label><label>Ket<input id="f_ket" list="kets" value="${esc(o.ket)}"></label></div>
 ${m?'':`<label id="f_jamw" style="${o.shift==='CITO'?'':'display:none'}">Jam layanan CITO<input type="time" id="f_jam" value="${esc(o.jam||'')}"></label>`}
 <datalist id="kets"><option>HBsAg</option><option>HCV</option><option>ISO TB</option><option>Non Reguler</option></datalist>
 ${m?`<label>Hari tetap <small>(centang hari; shift tiap hari bisa berbeda)</small></label><div class="dys">${[1,2,3,4,5,6,0].map(d=>`<div class="dr"><label><input type="checkbox" class="fh" value="${d}" ${o.hari.includes(d)?'checked':''} onchange="fHr(${d})">${HARI[d]}</label><select class="fs" id="fs${d}" ${o.hari.includes(d)?'':'disabled'}>${sel(['Pagi','Siang'],mSh(o,d))}</select></div>`).join('')}</div>`:''}
 <div class="r2"><button onclick="$('#dlg').close()">Batal</button><button class="pri" onclick="okForm()">Simpan</button></div>`;
-$('#dlg').showModal()}
+$('#dlg').showModal();fKf()}
 function fJam(){const w=$('#f_jamw');if(w)w.style.display=$('#f_shift').value==='CITO'?'':'none'}
 function fHr(d){const c=document.querySelector('.fh[value="'+d+'"]');$('#fs'+d).disabled=!c.checked}
 function fSh0(){const v=$('#f_shift').value;document.querySelectorAll('.fs').forEach(x=>x.value=v)}
@@ -669,7 +700,7 @@ function vPend(){const rows=PEND.map(p=>({p,d:pStat(p)})),bel=rows.filter(x=>x.d
 const list=(PF==='belum'?bel:PF==='jadwal'?jd:PF==='tutup'?tt:rows.filter(x=>x.d.st!=='Ditutup')).sort((a,b)=>(a.d.st==='Dijadwalkan'?1:0)-(b.d.st==='Dijadwalkan'?1:0)||(isC(b.p)-isC(a.p))||(a.p.tgl||'').localeCompare(b.p.tgl||'')||a.p.ts-b.p.ts);
 const chip=(k,t,n)=>`<button class="${PF===k?'on':''}" onclick="PF='${k}';render()">${t} (${n})</button>`;
 return `<div class="bar np"><button onclick="pendRefresh(true)">⟳</button>${chip('belum','Belum terlayani',bel.length)}${chip('jadwal','Sudah terjadwal',jd.length)}${chip('semua','Semua',rows.length-tt.length)}${tt.length||PF==='tutup'?chip('tutup','Ditutup',tt.length):''}</div><small style="margin-bottom:6px">Status mengikuti Jadwal Harian: jika pasien dibatalkan atau dihapus dari jadwal, otomatis kembali ke Belum terlayani.</small>`+
-(list.map(({p,d})=>`<div class="card"><div class="top"><div><b>${esc(p.nama)}</b><small>RM ${esc(p.rm)} · ${pUsia(p.lahir)} · ${esc(p.jk||'')} · ${esc(p.ruang)}</small></div>${d.st==='Dijadwalkan'?`<span class="b ok">Terjadwal</span>`:d.st==='Ditutup'?`<span class="b">Ditutup${p.alasan?' · '+esc(p.alasan):''}</span>`:d.st==='Dibatalkan'?'<span class="b no">Dibatalkan</span>':'<span class="b no">Belum terlayani</span>'}</div>
+(list.map(({p,d})=>`<div class="card"><div class="top"><div><b>${kfN(p.nama,p.rm)}</b><small>RM ${esc(p.rm)} · ${pUsia(p.lahir)} · ${esc(p.jk||'')} · ${esc(p.ruang)}</small></div>${d.st==='Dijadwalkan'?`<span class="b ok">Terjadwal</span>`:d.st==='Ditutup'?`<span class="b">Ditutup${p.alasan?' · '+esc(p.alasan):''}</span>`:d.st==='Dibatalkan'?'<span class="b no">Dibatalkan</span>':'<span class="b no">Belum terlayani</span>'}</div>
 <div style="margin:4px 0"><span class="b">${tgl(p.tgl)} · ${esc(p.waktu)}</span>${pTags(p)}</div>${d.note?`<small style="color:#c60">${esc(d.note)}</small>`:''}
 <small>${[p.dx,p.dpjp,'dikirim '+(p.byNama||'')].filter(Boolean).map(esc).join(' · ')}</small>
 <div class="r2" style="margin-top:8px"><button onclick="pDetail('${p.id}')">Lihat detail</button>${d.st==='Dijadwalkan'?`<button onclick="cur='${d.jad.tgl}';mon=cur.slice(0,7);go('harian')">${tglS(d.jad.tgl)} · ${sj(d.jad)} Lt.${d.jad.lantai} ›</button>`:d.st==='Ditutup'?`<button class="pri" onclick="pTutup('${p.id}',true)">Buka lagi</button><button style="grid-column:1/-1;color:#b00020;border-color:#b00020" onclick="pHapusForm('${p.id}')">🗑 Hapus permanen</button>`:`<button class="pri" onclick="pTarikForm('${p.id}')">${d.st==='Dibatalkan'?'Tarik lagi':'Tarik ke jadwal'}</button><button style="grid-column:1/-1" onclick="pTutupForm('${p.id}')">✕ Tutup pendaftaran (ganti pasien / meninggal / batal)</button>`}</div></div>`).join('')||'<div class="card mut">Tidak ada data.</div>')}
@@ -690,7 +721,7 @@ const lb=Object.keys(p.lab||{}).map(k=>r(REF[k].n,`<span class="${abn(k,p.lab[k]
 $('#dlg').innerHTML=`<h3>${esc(p.nama)} · ${esc(p.rm)}</h3><table>${r('Waktu HD',tgl(p.tgl)+' · '+esc(p.waktu))}${r('Indikasi Cito',esc(p.cito))}${r('Jenis kelamin / usia',esc(p.jk)+' · '+pUsia(p.lahir))}${r('Asal',(waIGD(p)?'IGD · ':'RANAP · ')+esc(p.ruang))}${r('DPJP pengirim',esc(p.dpjp))}${r('Diagnosa',esc(p.dx))}${r('Informed consent',p.ic?'Ya':isBaru(p)?'Belum':'Tidak diisi (pasien jadwal tetap)')}${r('Status',esc(p.status))}${r('Foto thorax',esc(p.thorax)+(p.thx?' — '+esc(p.thx):''))}${r('Tgl periksa thorax',p.thxTgl?tglS(p.thxTgl):'')}${r('HBsAg',rkS(p.hbs))}${r('Anti HIV',rkS(p.hiv))}${r('Anti HCV',rkS(p.hcv))}${r('Tgl periksa skrining',p.skrTgl?tglS(p.skrTgl):'')}${lb}${r('Tgl periksa lab',p.labTgl?tglS(p.labTgl):'')}${r('UF / Time',p.uf||p.time?esc(p.uf||'-')+' L / '+esc(p.time||'-')+' jam':'')}${r('QB',p.qb?esc(p.qb)+' ml/mnt':'')}${r('Heparin',esc(p.hep))}${r('Transfusi',p.trf&&p.trf.ya?esc(p.trf.n)+' kantong · '+esc(p.trf.stok):(p.trf&&p.trf.sel==='')?'':'Tidak')}${r('Akses vaskular',p.akses||p.aksesSt?[p.akses,p.aksesSt].filter(Boolean).map(esc).join(' · ')+(p.akses==='Femoral'?' (femoral tidak disarankan)':''):'')}</table><div id="pf" class="th"></div><button class="big" onclick="$('#dlg').close()">Tutup</button>`;$('#dlg').showModal();
 for(const f of p.foto||[]){try{const x=await api('foto',{id:f});const el=$('#pf');if(!el)break;if(x.ok)el.insertAdjacentHTML('beforeend',`<img src="${x.data}">`)}catch(e){}}}
 function pTarikForm(id){const p=PEND.find(x=>x.id===id),sh=p.waktu.startsWith('Pagi')?'Pagi':p.waktu.startsWith('Siang')?'Siang':(p.cito||/cito|segera/i.test(p.waktu))?'CITO':'';
-$('#dlg').innerHTML=`<h3>Tarik ke jadwal harian</h3><b>${esc(p.nama)}</b><small>RM ${esc(p.rm)} · RANAP · ${esc(p.waktu)}</small>
+$('#dlg').innerHTML=`<h3>Tarik ke jadwal harian</h3><b>${esc(p.nama)}</b><small>RM ${esc(p.rm)} · RANAP · ${esc(p.waktu)}</small>${kfWarn(p.nama,p.rm,p.id)}
 <label>Tanggal<input id="t_tgl" type="date" value="${p.tgl}" onchange="pCek('${id}')"></label>
 <div class="r2"><label>Shift<select id="t_sh" onchange="pCek('${id}')"><option value="">Pilih…</option><option ${sh==='Pagi'?'selected':''}>Pagi</option><option ${sh==='Siang'?'selected':''}>Siang</option><option value="CITO" ${sh==='CITO'?'selected':''}>CITO · atur jam sendiri</option></select></label><label>Lantai<select id="t_lt" onchange="pCek('${id}')"><option>1</option><option>2</option></select></label></div>
 <label id="t_jamw" style="display:none">Jam layanan CITO<input id="t_jam" type="time" value="${new Date().toTimeString().slice(0,5)}"></label>
